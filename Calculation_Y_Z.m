@@ -5,7 +5,7 @@
 %
 %
 %This program uses the output from 'trajectoires_voisines' in order to
-%calculate C, X and Y (cf technical note Nav-002 for more details)
+%calculate [Y]=[D]*[Z] (see NAV-002, equation (45))
 %
 % 1. Input:
 %     lat0  = variable that gives the latitude of the astral body observed from the reference trajectory
@@ -14,7 +14,7 @@
 %     long1 = variable that gives the longitude of the astral body observed from the shifted trajectory
 %     D     = 
 % 2. Outputs:
-%     Y =  21x1 double vector of knows values that contains measures from both trajectory (reference and actual)
+%     Y =  21x1 double vector of known values that contains measures from both trajectories (reference and actual)
 
 function[Y]= Calculation_Y_Z(lat0,long0,lat1, long1,D)
 %% On Board Data

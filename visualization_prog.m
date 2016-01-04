@@ -15,7 +15,9 @@
 %     algo : algo we use ton inverse the problem
 
 % 2. Outputs:
-%     CHI2= nx19 double matrix. Each column i contain chi2 in function of one X(i). Since we have 19 X(i) we have 19 columns.
+%     CHI2 = 1x19 double vector. CHI2 values at ii. Each column n contains chi2(n) at time ii, for X(n) found at time ii. Since we have 19 unknowns X(n) at ii we have 19 columns.
+%     diff = 1x19 double vector, difference between X(1..19) found and Xexp(1..19) expected
+%     A, B refer to the matrices in NAV-006
 % 3. Plots:
 % running this program will plot figures from 'trajectoires_voisines' the
 % chi2 for the 19 values of X and a nappe of a chi2 using two of the 19

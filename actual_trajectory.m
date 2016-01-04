@@ -6,7 +6,7 @@
 %
 %This program reads the input data.
 %
-% 1. Inputs:
+% 1. Inputs: partial path written in the code (!)
 %     'trajectory_name/trajectory_name_ephjup' : The actual trajectory we consider
 
 % 2. Outputs:
@@ -18,7 +18,9 @@
 %     coordinates1 = nx3 double float matrix giving the coordinates x,y,z of BIRDY at each point of the actual trajectory in the ecliptic J2000 in km.
 %     velocity1    = nx3 double float matrix giving the velocity vx,vy,vz of BIRDY  at each point of the actual trajectory in the ecliptic J2000 in km.
 
-function [TimeList1,lat1,long1,distance1,coordinates1,velocity1]=actual_trajectory(trajectory_name,trajectory_name_ephjup)
+%function [TimeList1,lat1,long1,distance1,coordinates1,velocity1]=actual_trajectory(trajectory_name,trajectory_name_ephjup)
+trajectory_name        = 'T0+jdv+i/58122+SOI_v6.4_jdv+1_312.xyzv';
+trajectory_name_ephjup = 'T0+jdv+i/58122+SOI_v6.4_jdv+1_312_ephjup.xyzv';
 
 %we get a path that Octave can follow to the file we need
 %concatenation of strings to be able to edit the trajectory name
@@ -54,4 +56,4 @@ distance1=data1_latlong(:,4);
 coordinates1=[data1_distance(:,2) data1_distance(:,3) data1_distance(:,4)];
 velocity1=[data1_distance(:,5) data1_distance(:,6) data1_distance(:,7)];
 
-end
+%end

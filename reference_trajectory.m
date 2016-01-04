@@ -6,7 +6,7 @@
 %
 %This program reads the input data.
 %
-% 1. Input:
+% 1. Inputs: written in the code
 %     the reference trajectory file
 
 % 2. Outputs:
@@ -17,7 +17,7 @@
 %     coordinates0 = nx3 double float matrix giving the coordinates x,y,z of BIRDY at each point of the reference trajectory in the ecliptic J2000 in km.
 %     velocity0    = nx3 double float matrix giving the velocity vx,vy,vz of BIRDY  at each point of the reference trajectory in the ecliptic J2000 in km.
 
-function [TimeList0,lat0,long0,distance0,coordinates0,velocity0]=reference_trajectory()
+%function [TimeList0,lat0,long0,distance0,coordinates0,velocity0]=reference_trajectory()
 
 %we get a path that Octave can follow to the file we need
 chemin1='./Inputs/Trajectories/T0/58122+SOI_v6.4_jdv000_312.xyzv'; 
@@ -54,4 +54,4 @@ distance0=data0_latlong(:,4); % this variable contains the distance between for 
 coordinates0=[data0_distance(:,2) data0_distance(:,3) data0_distance(:,4)];  % those variables contain the coordinates of BIRDY at each point of the reference trajectory (in km in the J2000 ecliptic).
 velocity0=[data0_distance(:,5) data0_distance(:,6) data0_distance(:,7)]; % those variables contain the velocity of BIRDY at each point of the reference trajectory (in km in the J2000 ecliptic).
 
-end
+%end
