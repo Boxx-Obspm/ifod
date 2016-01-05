@@ -11,7 +11,7 @@
 % 2. Outputs:
 %    text file 'algo_scenario-i : text file which displays the results of the accuracy of the matrix inversion method.
 
-function [data]=data_extraction()
+%function [data]=data_extraction()
 	
 data=[];
 MJD_0=2400000.5;
@@ -49,10 +49,12 @@ timeStep=fopen(strcat('./Inputs/Data/',sampling),'r'); #we open the file timeSte
 	sampling_data=dlmread(timeStep);
 	T=[sampling_data(:,1),sampling_data(:,2)] #we pick the sampling data and stock it in T and dt
 	dt=[sampling_data(:,3),sampling_data(:,4),sampling_data(:,5)]
+  # Not tolerant to empty lines !!!
 fclose(timeStep);
 
 for ii = 1:1:ii_MAX
 	[timeStep]=time_step(ii,T,dt,trajectory_name,trajectory_name_ephjup);
+  % implicite clearing & redefining of timeStep!
 [dr,Dvectr,Dvelocity]=test_interpolation(ii,timeStep,trajectory_name,trajectory_name_ephjup);
 [X,A,B,elapsed_time]=annul_grad(ii,timeStep,algo,trajectory_name,trajectory_name_ephjup);
 	[Xexp]=Calculate_Xexpected(dr, Dvectr, Dvelocity);
@@ -137,4 +139,4 @@ rename('dataExtraction',new_name);
 movefile(new_name,'Results');
 
 #endfor
-end
+%end
