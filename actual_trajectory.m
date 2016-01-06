@@ -19,16 +19,16 @@
 %     velocity1    = nx3 double float matrix giving the velocity vx,vy,vz of BIRDY  at each point of the actual trajectory in the ecliptic J2000 in km.
 
 function [TimeList1,lat1,long1,distance1,coordinates1,velocity1]=actual_trajectory(trajectory_name,trajectory_name_ephjup)
-trajectory_name        = 'T0+jdv+i/58122+SOI_v6.4_jdv+1_312.xyzv';
-trajectory_name_ephjup = 'T0+jdv+i/58122+SOI_v6.4_jdv+1_312_ephjup.xyzv';
+%trajectory_name        = 'T0+jdv+i/58122+SOI_v6.4_jdv+1_312.xyzv';
+%trajectory_name_ephjup = 'T0+jdv+i/58122+SOI_v6.4_jdv+1_312_ephjup.xyzv';
 
 %we get a path that Octave can follow to the file we need
 %concatenation of strings to be able to edit the trajectory name
-chemin1=strcat('./Inputs/Trajectories/',trajectory_name);
-chemin2=strcat('./Inputs/Trajectories/',trajectory_name_ephjup);
+%chemin1=strcat('./Inputs/Trajectories/',trajectory_name);
+%chemin2=strcat('./Inputs/Trajectories/',trajectory_name_ephjup);
 
 %To read the trajectory file from the META_STOP tag
-chemin1=fopen(chemin1,'rt');
+chemin1=fopen(trajectory_name,'rt');
 	l=' ';
 	while 1
 		l=fgetl(chemin1);
@@ -36,7 +36,7 @@ chemin1=fopen(chemin1,'rt');
 			break;
 		end;
 	end;
-chemin2=fopen(chemin2,'rt');
+chemin2=fopen(trajectory_name_ephjup,'rt');
 	l=' ';
 	while 1
 		l=fgetl(chemin2);

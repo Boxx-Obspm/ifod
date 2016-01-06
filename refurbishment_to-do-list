@@ -1,5 +1,6 @@
 reference_trajectory.m
 ----------------------
+- c'est TOUJOURS la même traj de reference!
 - lire les inputs depuis ligne de commande ou fichier par défaut
 - modifier l'appel à la fonction
 - renommer, recommenter
@@ -19,4 +20,4 @@ Calculation_Y_Z.m
 
 visualization_prog.m
 --------------------
-Produit les valeurs du chi2 et l'écart entre traj reele et traj attendue
+Produit les valeurs du chi2 et l'écart entre traj reelle et traj attendue

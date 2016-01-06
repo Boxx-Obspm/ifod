@@ -20,8 +20,10 @@
 function [TimeList0,lat0,long0,distance0,coordinates0,velocity0]=reference_trajectory()
 
 %we get a path that Octave can follow to the file we need
-chemin1='./Inputs/Trajectories/T0/58122+SOI_v6.4_jdv000_312.xyzv'; 
-chemin2='./Inputs/Trajectories/T0/58122+SOI_v6.4_jdv000_312_ephjup.xyzv';
+%chemin1='./Inputs/Trajectories/T0/58122+SOI_v6.4_jdv000_312.xyzv'; 
+%chemin2='./Inputs/Trajectories/T0/58122+SOI_v6.4_jdv000_312_ephjup.xyzv';
+chemin1='../ifod_tests/datasets/T0.xyzv'; 
+chemin2='../ifod_tests/datasets/T0_ephbody.xyzv';
 
 %To read the trajectory file from the META_STOP tag
 chemin1=fopen(chemin1,'rt');
