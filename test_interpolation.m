@@ -1,31 +1,30 @@
 %%----------------HEADER---------------------------%%
-%Author:           Tristan Mallet & Oussema SLEIMI
-%Version & Date:   V2 11--2015 (dd/mm/yyyy)
+%Author:           Boris Segret
+%Version & Date:   V2.1 05-02-2016 (dd-mm-yyyy)
+%                  - *no* call to reference_trajectory.m
+%                  - *no* changes of the inputs
+%                  until V2 11-09-2015 Oussema SLEIMI & Tristan Mallet
 %CL=1
 %
-%
-%This program interpolates data in order to run tests.
+% Inputs are extracted and interpolated at 4 specific timesteps ii+[timeStep], then
+% the theoretical shift between the reference and the actual trajectory is output.
 %
 % 1. Input:
-%     Xexp =  19x1 double vector of unknows build by using data from both actual and reference trajectories.
-%     'trajectory_name/trajectory_name_ephjup' : The actual trajectory we consider
-%     timestep : the various sampling we consider to take the pictures
+%     <ref_trajectory>
+%     ii        = timestep of the trajectory to start interpolating
+%     timeStep  = 1x3 integer vector, nb of indices for 3 additional points of the trajectory
+%     <actual_trajectory>
 % 2. Outputs:
-%     
-%     dr          = 4x1 double float vector giving the difference between the distance to Jupiter of the actual and reference trajectory at 4 different times.
-%     Dvectr      = 4x1 double float vector giving the difference between the corrdinates of the actual and reference trajectory at 4 different times.
-%     Dvelocity   = 4x1 double float vector giving the difference between the velocity of the actual and reference trajectory at 4 different times.
+%     dr        = 4x1 double float vector giving the difference between the distance to Jupiter of the actual and reference trajectory at 4 different times.
+%     Dvectr    = 4x1 double float vector giving the difference between the corrdinates of the actual and reference trajectory at 4 different times.
+%     Dvelocity = 4x1 double float vector giving the difference between the velocity of the actual and reference trajectory at 4 different times.
 
-function[dr,Dvectr,Dvelocity] = ...
+function [dr, Dvectr, Dvelocity] = ...
    test_interpolation(TimeList0,distance0,coordinates0,velocity0, ...
                       ii,timeStep, ...
                       TimeList1,distance1,coordinates1,velocity1)
-%function[dr,Dvectr,Dvelocity]=test_interpolation(reftrajectory, refephemerid, ii,timeStep,trajectory_name,trajectory_name_ephjup)
 
-%[TimeList0,~,~,distance0,coordinates0,velocity0]=reference_trajectory(reftrajectory, refephemerid); % we call this function to get the needed inputs from the reference trajectory.
-%[TimeList1,~,~,distance1,coordinates1,velocity1]=actual_trajectory(trajectory_name,trajectory_name_ephjup); % we call this function to get the needed inputs from the actual trajectory.
-
-TimeList     =[TimeList1(ii);TimeList1(ii+timeStep(1));TimeList1(ii+timeStep(1)+timeStep(2));TimeList1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
+TimeList         =[TimeList1(ii);TimeList1(ii+timeStep(1));TimeList1(ii+timeStep(1)+timeStep(2));TimeList1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
 out_distance1    =[distance1(ii);distance1(ii+timeStep(1));distance1(ii+timeStep(1)+timeStep(2));distance1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
 out_coordinates1 =[coordinates1(ii,:);coordinates1(ii+timeStep(1),:);coordinates1(ii+timeStep(1)+timeStep(2),:);coordinates1(ii+timeStep(1)+timeStep(2)+timeStep(3),:)];
 out_velocity1    =[velocity1(ii,:);velocity1(ii+timeStep(1),:);velocity1(ii+timeStep(1)+timeStep(2),:);velocity1(ii+timeStep(1)+timeStep(2)+timeStep(3),:)];
@@ -35,7 +34,7 @@ out_velocity1    =[velocity1(ii,:);velocity1(ii+timeStep(1),:);velocity1(ii+time
 i=1+sum((TimeList0<TimeList(1)));                                                                                                                        %
 if (i==1)
 i=2;
-endif                                                                                                                                                         %                                                  
+end                                                                                                                                                       %                                                  
 distance0_1 =distance0(i-1)     +(TimeList(1)-TimeList0(i-1))*(distance0(i)-distance0(i-1))          /(TimeList0(i)-TimeList0(i-1));                     %
 x0_1        =coordinates0(i-1,1)+(TimeList(1)-TimeList0(i-1))*(coordinates0(i,1)-coordinates0(i-1,1))/(TimeList0(i)-TimeList0(i-1));                     %
 y0_1        =coordinates0(i-1,2)+(TimeList(1)-TimeList0(i-1))*(coordinates0(i,2)-coordinates0(i-1,2))/(TimeList0(i)-TimeList0(i-1));                     %
@@ -50,7 +49,7 @@ vz0_1       =velocity0(i-1,3)   +(TimeList(1)-TimeList0(i-1))*(velocity0(i,3)-ve
 i=1+sum((TimeList0<TimeList(2)));                                                                                                                        %
 if (i==1)
 i=2;
-endif                                                                                                                                                       %
+end                                                                                                                                                       %
 distance0_2 =distance0(i-1)     +(TimeList(2)-TimeList0(i-1))*(distance0(i)-distance0(i-1))          /(TimeList0(i)-TimeList0(i-1));                     %
 x0_2        =coordinates0(i-1,1)+(TimeList(2)-TimeList0(i-1))*(coordinates0(i,1)-coordinates0(i-1,1))/(TimeList0(i)-TimeList0(i-1));                     %
 y0_2        =coordinates0(i-1,2)+(TimeList(2)-TimeList0(i-1))*(coordinates0(i,2)-coordinates0(i-1,2))/(TimeList0(i)-TimeList0(i-1));                     %
@@ -65,7 +64,7 @@ vz0_2       =velocity0(i-1,3)   +(TimeList(2)-TimeList0(i-1))*(velocity0(i,3)-ve
 i=1+sum((TimeList0<TimeList(3)));                                                                                                                        %
 if (i==1)
 i=2;
-endif                                                                                                                                                          %
+end                                                                                                                                                          %
 distance0_3 =distance0(i-1)     +(TimeList(3)-TimeList0(i-1))*(distance0(i)-distance0(i-1))          /(TimeList0(i)-TimeList0(i-1));                     %
 x0_3        =coordinates0(i-1,1)+(TimeList(3)-TimeList0(i-1))*(coordinates0(i,1)-coordinates0(i-1,1))/(TimeList0(i)-TimeList0(i-1));                     %
 y0_3        =coordinates0(i-1,2)+(TimeList(3)-TimeList0(i-1))*(coordinates0(i,2)-coordinates0(i-1,2))/(TimeList0(i)-TimeList0(i-1));                     %
@@ -80,7 +79,7 @@ vz0_3       =velocity0(i-1,3)   +(TimeList(3)-TimeList0(i-1))*(velocity0(i,3)-ve
 i=1+sum((TimeList0<TimeList(4)));                                                                                                                        %
 if (i==1)
 i=2; 
-endif                                                                                                                                                         % 
+end                                                                                                                                                         % 
 distance0_4 =distance0(i-1)     +(TimeList(4)-TimeList0(i-1))*(distance0(i)     -distance0(i-1))     /(TimeList0(i)-TimeList0(i-1));                     %
 x0_4        =coordinates0(i-1,1)+(TimeList(4)-TimeList0(i-1))*(coordinates0(i,1)-coordinates0(i-1,1))/(TimeList0(i)-TimeList0(i-1));                     %
 y0_4        =coordinates0(i-1,2)+(TimeList(4)-TimeList0(i-1))*(coordinates0(i,2)-coordinates0(i-1,2))/(TimeList0(i)-TimeList0(i-1));                     %

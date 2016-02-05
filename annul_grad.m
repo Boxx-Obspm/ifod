@@ -1,25 +1,27 @@
 %%----------------HEADER---------------------------%%
-%Author:          Tristan Mallet & Oussema SLEIMI
-%Version & Date:   V2 11-09-2015 (dd/mm/yyyy)
+%Author:           Boris Segret
+%Version & Date:   V2.1 05-02-2016 (dd-mm-yyyy)
+%                  - *no* call to reference_trajectory.m
+%                  - *no* changes of the inputs
+%                  until V2 11-09-2015 Oussema SLEIMI & Tristan Mallet
 %CL=1
 %
+% ifod algorithm: <reconstructed_shift> is estimated from the on-board measured
+% directions of a foreground body compared with the expected directions.
 %
-%This program cancel the grad and gives us the solution X of the problem.
-%
-% 1. Input:
-%     ii           = Point of the trajectory that will be used to solve the problem. For this case ii must be included between 1 and 987.
-%     'trajectory_name/trajectory_name_ephjup' : The actual trajectory we consider
-%     timestep : various sampling we consider to take the pictures
-%     algo : algo we use ton inverse the problem
-
-% 2. Outputs:
+% Inputs:
+%     <expected_directions>
+%     ii        = timestep of the trajectory to start interpolating
+%     timeStep  = 1x3 integer vector, nb of indices for 3 additional points of the trajectory
+%     algo : algorithm we use to inverse the problem
+%     <measured_directions>
+% Outputs:
 %    
 %     X  = 19x1  double float vector giving the solution of the problem
 %     A  = 19x19 double float vector giving the matrix A (cf NAv-002 for more details).
 %     B  = 19x19 double float vector giving the matrix B (cf NAv-002 for more details).
+%     elapsed_time = 
 
-
-%function [X,A,B,elapsed_time]=annul_grad(reftrajectory, refephemerid, ii,timeStep,algo,trajectory_name,trajectory_name_ephjup)
 function [X,A,B,elapsed_time]=annul_grad(in_TimeList0, in_lat0, in_long0, in_distance0,...
     ii, timeStep, algo, ...
     in_TimeList1, in_lat1, in_long1)
@@ -27,14 +29,11 @@ function [X,A,B,elapsed_time]=annul_grad(in_TimeList0, in_lat0, in_long0, in_dis
 
 [TimeList, out_lat0, out_long0, out_distance0, out_lat1, out_long1] = ...
    on_board_interpolation (in_TimeList0, in_lat0, in_long0, in_distance0, ...
-   ii,timeStep, ...
-   in_TimeList1, in_lat1, in_long1);
-%[TimeList,lat0,long0,distance0,lat1,long1]=on_board_interpolation(reftrajectory, refephemerid, ii,timeStep,trajectory_name,trajectory_name_ephjup);
+                           ii,timeStep, ...
+                           in_TimeList1, in_lat1, in_long1);
 
 [C,D]= Calculation_C_D(TimeList, out_lat0, out_long0, out_distance0);
 [Y]= Calculation_Y_Z(out_lat0, out_long0, out_lat1, out_long1, D);
-
-close all;
 
 %we calculate the matrix A.
 m=21;
@@ -63,45 +62,43 @@ for k=1:19
  B(k)=p;
 end
 
-#scale matrix
-
-#S=[ 1, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,   0,   0,   0;
-#    0, 1, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,   0,   0,   0;
-#  0, 0, 1,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,    0,    0,    0,   0,   0,   0;
-#    0, 0, 0,  1,  0,  0,  0,  0,  0,  0,  0,  0,   0, 0,    0,    0,   0,   0,   0;
-#    0, 0, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,   0, 0,    0,    0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  1,  0,  0,  0,  0,  0,  0,   0, 0,     0,    0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  1,  0,  0,  0,  0,  0,   0,    0, 0,    0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  1,  0,  0,  0,  0,   0,    0, 0,    0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  1,  0,  0,  0,   0,    0,  0,    0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  0,  1,  0,  0,   0,    0,    0, 0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  1,  0,   0,    0,    0, 0,   0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  1,   0,    0,    0,  0,   0,   0,   0;
-#    0, 0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,   1,    0,    0,    0, 0,   0,   0;
-#    0, 0, 0,  0, 0,  0,  0,  0,  0,  0,  0,  0,   0,    1,    0,    0,   0, 0,   0;
-#    0, 0, 0,  0,  0, 0,  0,  0,  0,  0,  0,  0,   0,    0,    1,    0,   0,   0, 0;
-#    0, 0, 0,  0,  0,  0, 0,  0,  0,  0,  0,  0,   0,    0,    0,    1, 0,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  0, 0,  0,  0,   0,    0,    0,    0, 1/1000,   0,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  0,  0, 0,  0,   0,    0,    0,    0,   0, 1/1000,   0;
-#    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,    0,   0,   0, 1/1000];
+% #scale matrix
+% 
+% #S=[ 1, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,   0,   0,   0;
+% #    0, 1, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,   0,   0,   0;
+% #  0, 0, 1,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,    0,    0,    0,   0,   0,   0;
+% #    0, 0, 0,  1,  0,  0,  0,  0,  0,  0,  0,  0,   0, 0,    0,    0,   0,   0,   0;
+% #    0, 0, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,   0, 0,    0,    0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  1,  0,  0,  0,  0,  0,  0,   0, 0,     0,    0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  1,  0,  0,  0,  0,  0,   0,    0, 0,    0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  1,  0,  0,  0,  0,   0,    0, 0,    0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  1,  0,  0,  0,   0,    0,  0,    0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  1,  0,  0,   0,    0,    0, 0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  1,  0,   0,    0,    0, 0,   0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  1,   0,    0,    0,  0,   0,   0,   0;
+% #    0, 0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,   1,    0,    0,    0, 0,   0,   0;
+% #    0, 0, 0,  0, 0,  0,  0,  0,  0,  0,  0,  0,   0,    1,    0,    0,   0, 0,   0;
+% #    0, 0, 0,  0,  0, 0,  0,  0,  0,  0,  0,  0,   0,    0,    1,    0,   0,   0, 0;
+% #    0, 0, 0,  0,  0,  0, 0,  0,  0,  0,  0,  0,   0,    0,    0,    1, 0,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  0, 0,  0,  0,   0,    0,    0,    0, 1/1000,   0,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0, 0,  0,   0,    0,    0,    0,   0, 1/1000,   0;
+% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,    0,   0,   0, 1/1000];
 
 t=cputime;
-#switch (algo)
+%switch (algo)
 	
-#	case 'PINV'	%we solve the problem by inversion.
+%	case 'PINV'	%we solve the problem by inversion.
  X=pinv(A)*(-B');
- # X=pinv(S*A)*S*(-B');
+ % X=pinv(S*A)*S*(-B');
  
  
- #	case 'FMIN'	%we solve the problem by using fminunc
+ %	case 'FMIN'	%we solve the problem by using fminunc
  	
- #	case 'MC'
+ %	case 'MC'
  	
- #	case 'SD'
+ %	case 'SD'
  	
-#endswitch
+%endswitch
 elapsed_time=cputime-t;
 
 end
-
- 

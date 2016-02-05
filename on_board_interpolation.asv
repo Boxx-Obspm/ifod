@@ -47,7 +47,7 @@ distance0_1=distance0(i-1)+(TimeList(1)-TimeList0(i-1))*(distance0(i)-distance0(
 i=1+sum((TimeList0<TimeList(2)));                                                                                    %
 if (i==1)
 i=2;
-end                                                                                                                      %
+endif                                                                                                                      %
 lat0_2     =lat0(i-1)     +(TimeList(2)-TimeList0(i-1))*(lat0(i)-lat0(i-1))          /(TimeList0(i)-TimeList0(i-1)); %
 long0_2    =long0(i-1)    +(TimeList(2)-TimeList0(i-1))*(long0(i)-long0(i-1))        /(TimeList0(i)-TimeList0(i-1)); %
 distance0_2=distance0(i-1)+(TimeList(2)-TimeList0(i-1))*(distance0(i)-distance0(i-1))/(TimeList0(i)-TimeList0(i-1)); %
@@ -58,7 +58,7 @@ distance0_2=distance0(i-1)+(TimeList(2)-TimeList0(i-1))*(distance0(i)-distance0(
 i=1+sum((TimeList0<TimeList(3)));                                                                                    %
 if (i==1) 
 i=2;
-end                                                                                                                      %
+endif                                                                                                                      %
 lat0_3     =lat0(i-1)     +(TimeList(3)-TimeList0(i-1))*(lat0(i)-lat0(i-1))          /(TimeList0(i)-TimeList0(i-1)); %
 long0_3    =long0(i-1)    +(TimeList(3)-TimeList0(i-1))*(long0(i)-long0(i-1))        /(TimeList0(i)-TimeList0(i-1)); %
 distance0_3=distance0(i-1)+(TimeList(3)-TimeList0(i-1))*(distance0(i)-distance0(i-1))/(TimeList0(i)-TimeList0(i-1)); %
@@ -69,7 +69,7 @@ distance0_3=distance0(i-1)+(TimeList(3)-TimeList0(i-1))*(distance0(i)-distance0(
 i=1+sum((TimeList0<TimeList(4)));                                                                                    %
 if (i==1)
  i=2;
-end                                                                                                                      %
+ endif                                                                                                                      %
 lat0_4     =lat0(i-1)     +(TimeList(4)-TimeList0(i-1))*(lat0(i)-lat0(i-1))          /(TimeList0(i)-TimeList0(i-1)); %
 long0_4    =long0(i-1)    +(TimeList(4)-TimeList0(i-1))*(long0(i)-long0(i-1))        /(TimeList0(i)-TimeList0(i-1)); %
 distance0_4=distance0(i-1)+(TimeList(4)-TimeList0(i-1))*(distance0(i)-distance0(i-1))/(TimeList0(i)-TimeList0(i-1)); %
