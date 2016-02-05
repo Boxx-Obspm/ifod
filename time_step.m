@@ -22,6 +22,8 @@
 function [timeStep]=time_step(ii,T,dt,trajectory_name,trajectory_name_ephjup)
 [TimeList1,lat1,long1,distance1,coordinates1,velocity1]=actual_trajectory(trajectory_name,trajectory_name_ephjup);
 % second call to actual_trajectory!!
+% the need is only to access Timelist1
+
 MJD_0=2400000.5;
 SEC_0=86400;
 % THESIS : considérer jour sideral ou jour solaire? (ici jour solaire)

@@ -19,11 +19,20 @@
 %     B  = 19x19 double float vector giving the matrix B (cf NAv-002 for more details).
 
 
-function [X,A,B,elapsed_time]=annul_grad(ii,timeStep,algo,trajectory_name,trajectory_name_ephjup)
+%function [X,A,B,elapsed_time]=annul_grad(reftrajectory, refephemerid, ii,timeStep,algo,trajectory_name,trajectory_name_ephjup)
+function [X,A,B,elapsed_time]=annul_grad(in_TimeList0, in_lat0, in_long0, in_distance0,...
+    ii, timeStep, algo, ...
+    in_TimeList1, in_lat1, in_long1)
 %we call the needed sub-programs to operate this one.
-[TimeList,lat0,long0,distance0,lat1,long1]=on_board_interpolation(ii,timeStep,trajectory_name,trajectory_name_ephjup);
-[C,D]= Calculation_C_D(TimeList,lat0,long0,distance0);
-[Y]= Calculation_Y_Z(lat0,long0,lat1, long1,D);
+
+[TimeList, out_lat0, out_long0, out_distance0, out_lat1, out_long1] = ...
+   on_board_interpolation (in_TimeList0, in_lat0, in_long0, in_distance0, ...
+   ii,timeStep, ...
+   in_TimeList1, in_lat1, in_long1);
+%[TimeList,lat0,long0,distance0,lat1,long1]=on_board_interpolation(reftrajectory, refephemerid, ii,timeStep,trajectory_name,trajectory_name_ephjup);
+
+[C,D]= Calculation_C_D(TimeList, out_lat0, out_long0, out_distance0);
+[Y]= Calculation_Y_Z(out_lat0, out_long0, out_lat1, out_long1, D);
 
 close all;
 

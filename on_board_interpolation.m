@@ -20,18 +20,23 @@
 %     long1     = 4x1 double float vector giving the longitude of Jupiter seen from the actual trajectory at the 4 times of measurements.
 %     lat1      = 4x1 double float vector giving the latitude of Jupiter seen from the actual trajectory at the 4 times of measurements.
 
-function[TimeList,lat0,long0,distance0,lat1,long1]=on_board_interpolation(ii,timeStep,trajectory_name,trajectory_name_ephjup)
+function [TimeList, out_lat0, out_long0, out_distance0, out_lat1, out_long1] = ...
+   on_board_interpolation (TimeList0,lat0,long0,distance0, ...
+   ii,timeStep, ...
+   TimeList1,lat1,long1)
+
+%function [TimeList,lat0,long0,distance0,lat1,long1] = on_board_interpolation (reftrajectory, refephemerid, ii,timeStep, trajectory_name,trajectory_name_ephjup)
 
 %we get the data from the inputs.
-[TimeList0,lat0,long0,distance0,~,~]=reference_trajectory(); 
-[TimeList1,lat1,long1,~,~,~]=actual_trajectory(trajectory_name,trajectory_name_ephjup);
+%[TimeList0,lat0,long0,distance0,~,~]=reference_trajectory(reftrajectory, refephemerid); 
+%[TimeList1,lat1,long1,~,~,~]=actual_trajectory(trajectory_name,trajectory_name_ephjup);
 
 
 
 %this part simulate data from the planet tracker.
 TimeList=[TimeList1(ii);TimeList1(ii+timeStep(1));TimeList1(ii+timeStep(1)+timeStep(2));TimeList1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
-lat1=[lat1(ii);lat1(ii+timeStep(1));lat1(ii+timeStep(1)+timeStep(2));lat1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
-long1=[long1(ii);long1(ii+timeStep(1));long1(ii+timeStep(1)+timeStep(2));long1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
+out_lat1=[lat1(ii);lat1(ii+timeStep(1));lat1(ii+timeStep(1)+timeStep(2));lat1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
+out_long1=[long1(ii);long1(ii+timeStep(1));long1(ii+timeStep(1)+timeStep(2));long1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INTERPOLATION #1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 i=1+sum((TimeList0<TimeList(1)));                                                                                    %
@@ -77,9 +82,9 @@ distance0_4=distance0(i-1)+(TimeList(4)-TimeList0(i-1))*(distance0(i)-distance0(
                                                                                                                      %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-lat0=[lat0_1;lat0_2;lat0_3;lat0_4];
-long0=[long0_1;long0_2;long0_3;long0_4];
-distance0=[distance0_1;distance0_2;distance0_3;distance0_4];
+out_lat0=[lat0_1;lat0_2;lat0_3;lat0_4];
+out_long0=[long0_1;long0_2;long0_3;long0_4];
+out_distance0=[distance0_1;distance0_2;distance0_3;distance0_4];
 
 
 end
