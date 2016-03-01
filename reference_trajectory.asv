@@ -38,9 +38,7 @@ f1=fopen(chemin1,'rt');
 data0_distance = data0_distance';
 % alternative (plus tard): continuer la boucle sur le fichier d'entree et
 % eliminer les colonnes en trop, plus flexible si colonnes additionnelles:
-% [A, nb]=fscanf(f1,'%f %f %f %f %f %f %f %f %f %f %f %f', [12 1]);
-% l=fgetl(f1);
-% data0_distance = [data0_distance; A'];
+%
 
 %data0_distance=dlmread(chemin1);
 fclose(f1);
@@ -53,7 +51,7 @@ f2=fopen(chemin2,'rt');
 			break;
 		end;
 	end;
-[data0_latlong,nb] = fscanf(f2,'%f %f %f %f', [4 inf]);
+[data0_latlong,nb] = fscanf(f2,'%f %f %f %f %f %f %f %f %f %f %f %f', [12 inf]);
 data0_latlong = data0_latlong';
 %data0_latlong=dlmread(chemin2);
 fclose(f2);

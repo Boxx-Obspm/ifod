@@ -37,19 +37,19 @@ T=T(:,1)+MJD_0+T(:,2)/SEC_0;
 			timeStep=dt(k,:)/SEC_0*3600;
 			break;
 		else timeStep=dt(k+1,:)/SEC_0*3600;
-		endif
+        end
 	
-	endfor
+    end
   
-  # ici les timeStep étaient en nb de jours décimaux (ce qui est bien), je les renomme dt1, dt2, dt3
-  # puis ils sont convertis en nb de "pas".... mais pourquoi???
-  # donc timeStep(1) : nb de pas du fichier depuis ii et le plus proche *après* ii+dt1
-  #              (2) : nb de pas du fichier depuis (ii+timeStep(1)) et le plus proche *après* ii+timeStep(1)+dt2
-  #                    (notons que timeStep(1) n'est *plus* dt1 en jours décimaux mais un pas de fichier)
-  #              (3) : nb de pas du fichier depuis (ii+timeStep(1)+timeStep(2)) et le plus proche *après* ii+timeStep(1)+timeStep(2)+dt3
-  # pas trop grave mais tres fort risque de fournir 2 mesures identiques à l'algorithme
-  
-  # en plus c'est tres long car le calcul a lieu sur la totalite du vecteur des dates
+%   # ici les timeStep étaient en nb de jours décimaux (ce qui est bien), je les renomme dt1, dt2, dt3
+%   # puis ils sont convertis en nb de "pas".... mais pourquoi???
+%   # donc timeStep(1) : nb de pas du fichier depuis ii et le plus proche *après* ii+dt1
+%   #              (2) : nb de pas du fichier depuis (ii+timeStep(1)) et le plus proche *après* ii+timeStep(1)+dt2
+%   #                    (notons que timeStep(1) n'est *plus* dt1 en jours décimaux mais un pas de fichier)
+%   #              (3) : nb de pas du fichier depuis (ii+timeStep(1)+timeStep(2)) et le plus proche *après* ii+timeStep(1)+timeStep(2)+dt3
+%   # pas trop grave mais tres fort risque de fournir 2 mesures identiques à l'algorithme
+%   
+%   # en plus c'est tres long car le calcul a lieu sur la totalite du vecteur des dates
 	timeStep(1)=sum((TimeList1<=TimeList1(ii)+timeStep(1)))-ii;
 	timeStep(2)=sum((TimeList1<=TimeList1(ii+timeStep(1))+timeStep(2)))-ii-timeStep(1);
 	timeStep(3)=sum((TimeList1<=TimeList1(ii+timeStep(1)+timeStep(2))+timeStep(3)))-ii-timeStep(1)-timeStep(2);

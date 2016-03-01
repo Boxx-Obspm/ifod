@@ -31,7 +31,7 @@ function [TimeList1,lat1,long1,distance1,coordinates1,velocity1]=actual_trajecto
 f1=fopen(trajectory_name,'rt');
 	l=' ';
 	while 1
-		l=fgetl(f1);
+		l=fgetl(chemin1);
 		if strfind(l,'META_STOP')>0
 			break;
 		end;
@@ -43,18 +43,14 @@ fclose(f1);
 f2=fopen(trajectory_name_ephjup,'rt');
 	l=' ';
 	while 1
-		l=fgetl(f2);
+		l=fgetl(chemin2);
 		if strfind(l,'META_STOP')>0
 			break;
 		end;
 	end;
-[data1_latlong,nb] = fscanf(f2,'%f %f %f %f', [4 inf]);
-data1_latlong = data1_latlong';
-%data0_latlong=dlmread(chemin2);
-fclose(f2);
-
 % data1_distance=dlmread(chemin1);
-% data1_latlong=dlmread(chemin2);
+data1_latlong=dlmread(chemin2);
+fclose(chemin2);
 
 TimeList1=data1_latlong(:,1); 
 lat1=data1_latlong(:,2); 
