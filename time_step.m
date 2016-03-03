@@ -1,7 +1,8 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-%Version & Date:   v. 1.1, 05-01-2016 (dd/mm/yyyy) for clarifications only
-%                  V1, 11-09-2015, Tristan Mallet
+%Version & Date:
+%                  V. 1.2, 03-03-2016 (dd/mm/yyyy) for clarifications only
+%                  until V1, 11-09-2015, Tristan Mallet
 %CL=1
 %
 %

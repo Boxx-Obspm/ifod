@@ -1,6 +1,7 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-%Version & Date:   V2.1 05-02-2016 (dd-mm-yyyy)
+%Version & Date:
+%                  V2.2 03-03-2016 (dd-mm-yyyy)
 %                  - *no* call to reference_trajectory.m
 %                  - *no* changes of the inputs
 %                  until V2 11-09-2015 Oussema SLEIMI & Tristan Mallet
