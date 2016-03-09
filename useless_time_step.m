@@ -51,7 +51,7 @@ T=T(:,1)+MJD_0+T(:,2)/SEC_0;
 %   # pas trop grave mais tres fort risque de fournir 2 mesures identiques à l'algorithme
 %   
 %   # en plus c'est tres long car le calcul a lieu sur la totalite du vecteur des dates
-	timeStep(1)=sum((TimeList1<=TimeList1(ii)+timeStep(1)))-ii;
-	timeStep(2)=sum((TimeList1<=TimeList1(ii+timeStep(1))+timeStep(2)))-ii-timeStep(1);
-	timeStep(3)=sum((TimeList1<=TimeList1(ii+timeStep(1)+timeStep(2))+timeStep(3)))-ii-timeStep(1)-timeStep(2);
+	timeStep(1)=sum((TimeList1<=TimeList1(ii)+timeStep(1))) -ii;
+	timeStep(2)=sum((TimeList1<=TimeList1(ii+timeStep(1))+timeStep(2))) -ii-timeStep(1);
+	timeStep(3)=sum((TimeList1<=TimeList1(ii+timeStep(1)+timeStep(2))+timeStep(3))) -ii-timeStep(1)-timeStep(2);
 end

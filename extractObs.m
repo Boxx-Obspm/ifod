@@ -1,6 +1,10 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-%Version & Date:   V2.1 05-02-2016 (dd-mm-yyyy)
+%Version & Date:
+%                  Vxxx dd-mm-2016 (dd-mm-yyyy)
+%                  - former "on_board_interpolation"
+%                  - use of embedded "interp1" function
+%                  V2.2 03-03-2016 (dd-mm-yyyy), Boris Segret
 %                  - *no* call to reference_trajectory.m
 %                  - *no* changes of the inputs
 %                  until V2 11-09-2015 Oussema SLEIMI & Tristan Mallet
@@ -22,11 +26,17 @@
 %     out_long1     = 4x1 double float vector giving the longitude of Jupiter seen from the actual trajectory at the 4 times of measurements.
 %     out_lat1      = 4x1 double float vector giving the latitude of Jupiter seen from the actual trajectory at the 4 times of measurements.
 
-function [TimeList, out_lat0, out_long0, out_distance0, out_lat1, out_long1] = ...
-   on_board_interpolation (TimeList0,lat0,long0,distance0, ...
-                           ii,timeStep, ...
-                           TimeList1,lat1,long1)
+function observd = extractObs(epochs, TimeList1, lat1, long1)
 
+out_lat1  = interp1(TimeList1, lat1,  epochs, 'linear');
+out_long1 = interp1(TimeList1, long1, epochs, 'linear');
+
+observd = [out_lat1' out_long1'];
+end
+
+function result = inutile()
+
+% predict = [TimeList, out_lat0, out_long0, out_distance0, out_lat1, out_long1]
 %this part simulate data from the planet tracker.
 TimeList=[TimeList1(ii);TimeList1(ii+timeStep(1));TimeList1(ii+timeStep(1)+timeStep(2));TimeList1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
 out_lat1=[lat1(ii);lat1(ii+timeStep(1));lat1(ii+timeStep(1)+timeStep(2));lat1(ii+timeStep(1)+timeStep(2)+timeStep(3))];
@@ -47,7 +57,7 @@ distance0_1=distance0(i-1)+(TimeList(1)-TimeList0(i-1))*(distance0(i)-distance0(
 i=1+sum((TimeList0<TimeList(2)));                                                                                    %
 if (i==1)
 i=2;
-endif                                                                                                                      %
+end                                                                                                                      %
 lat0_2     =lat0(i-1)     +(TimeList(2)-TimeList0(i-1))*(lat0(i)-lat0(i-1))          /(TimeList0(i)-TimeList0(i-1)); %
 long0_2    =long0(i-1)    +(TimeList(2)-TimeList0(i-1))*(long0(i)-long0(i-1))        /(TimeList0(i)-TimeList0(i-1)); %
 distance0_2=distance0(i-1)+(TimeList(2)-TimeList0(i-1))*(distance0(i)-distance0(i-1))/(TimeList0(i)-TimeList0(i-1)); %
@@ -58,7 +68,7 @@ distance0_2=distance0(i-1)+(TimeList(2)-TimeList0(i-1))*(distance0(i)-distance0(
 i=1+sum((TimeList0<TimeList(3)));                                                                                    %
 if (i==1) 
 i=2;
-endif                                                                                                                      %
+end                                                                                                                      %
 lat0_3     =lat0(i-1)     +(TimeList(3)-TimeList0(i-1))*(lat0(i)-lat0(i-1))          /(TimeList0(i)-TimeList0(i-1)); %
 long0_3    =long0(i-1)    +(TimeList(3)-TimeList0(i-1))*(long0(i)-long0(i-1))        /(TimeList0(i)-TimeList0(i-1)); %
 distance0_3=distance0(i-1)+(TimeList(3)-TimeList0(i-1))*(distance0(i)-distance0(i-1))/(TimeList0(i)-TimeList0(i-1)); %
@@ -69,7 +79,7 @@ distance0_3=distance0(i-1)+(TimeList(3)-TimeList0(i-1))*(distance0(i)-distance0(
 i=1+sum((TimeList0<TimeList(4)));                                                                                    %
 if (i==1)
  i=2;
- endif                                                                                                                      %
+end                                                                                                                      %
 lat0_4     =lat0(i-1)     +(TimeList(4)-TimeList0(i-1))*(lat0(i)-lat0(i-1))          /(TimeList0(i)-TimeList0(i-1)); %
 long0_4    =long0(i-1)    +(TimeList(4)-TimeList0(i-1))*(long0(i)-long0(i-1))        /(TimeList0(i)-TimeList0(i-1)); %
 distance0_4=distance0(i-1)+(TimeList(4)-TimeList0(i-1))*(distance0(i)-distance0(i-1))/(TimeList0(i)-TimeList0(i-1)); %

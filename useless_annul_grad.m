@@ -18,9 +18,9 @@
 %     <measured_directions>
 % Outputs:
 %    
-%     X  = 19x1  double float vector giving the solution of the problem
-%     A  = 19x19 double float vector giving the matrix A (cf NAv-002 for more details).
-%     B  = 19x19 double float vector giving the matrix B (cf NAv-002 for more details).
+%     X  = 19x1  double float vector giving the p-vector solution of the problem
+%     A  = 19x19 double float vector giving the pxp-matrix A (cf NAv-002 for more details).
+%     B  = 1x19 double float vector giving the p-vector B (cf NAv-002 for more details).
 %     elapsed_time = 
 
 function [X,A,B,elapsed_time]=annul_grad(in_TimeList0, in_lat0, in_long0, in_distance0,...
