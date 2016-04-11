@@ -1,2 +1,11 @@
 *.asv
 *.lnk
+*.pdf
+*.svg
+*.png
+octave-workspace
+*.m~
+useless_*
+*.xyzv
+*.eph
+inputs/Trajectories/EME

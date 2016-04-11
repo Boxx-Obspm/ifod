@@ -13,13 +13,12 @@
 %
 % 1. Inputs:
 %    Nobs : Nb.of observation epochs to be output for OD computation
-%    et0  : current date on the actual trajectory
-%    T    : Nx2 matrix, Nx(MJD_day, seconds_in_day), dates where the measurement sampling changes
-%    dt   : (N-1)x3 matrix, with dt1, dt2, dt3, intervals (in hours) between measurements before "ii"
-%    TimeList: time steps of the actual trajectory as indexed by ii
+%    et0  : current date on the actual trajectory -in Julian Dates)
+%    TS   : Nx2 matrix, Nx(MJD_day, seconds_in_day), dates where the measurement sampling changes
+%    dt   : (N-1)x3 matrix, with dt1, dt2, dt3, intervals (in hours) between measurements after "ii"
 %
 % 2. Outputs:
-%   epochs : Nobs-vector in decimal Julian Days (at ii, ii-dt1, ii-dt2, ii-dt3)
+%   epochs : Nobs-vector in decimal Julian Days (at ii, ii+dt1, ii+dt1+dt2, ii+dt1+dt2+dt3)
 
 
 function epochs = slctEpochs (Nobs, et0, TS, dt)

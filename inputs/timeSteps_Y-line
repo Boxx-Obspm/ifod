@@ -1,0 +1,15 @@
+META_START
+
+OBJECT_NAME : ---
+ID_NAME : ---
+TRAJECTORY_NAME : Y-line.xyzv
+
+COLUMN #01 : Day, integer (in MJD)
+COLUMN #02 : decimal Second in the day, decimal, in the day T
+COLUMN #03 : dt1 to 2nd measurement (in hours)
+COLUMN #04 : dt2 from 2nd to 3rd measurement (in hours)
+COLUMN #05 : dt3 from 3rd to 4th measurement (in hours)
+
+META_STOP
+50000   0.0     6     6     6
+60000   0.0     0     0     0
