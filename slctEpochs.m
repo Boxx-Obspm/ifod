@@ -1,7 +1,8 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
 %Version & Date:
-%                  V. xxx, dd-mm-2016 (dd/mm/yyyy)
+%                  V.1.3, 15-03-2016 (dd/mm/yyyy)
+%                  - REMAINING ISSUES: duration of the day must be sideral (86140s) or earthling (86400s)?
 %                  - only extracts observational dates according to a "test" strategy
 %                  V. 1.2, 03-03-2016, Boris Segret, as "time_step.m"
 %                  - for clarifications only
@@ -9,23 +10,22 @@
 %CL=1
 %
 %
-% Produces <Nobs> epochs that will be considered for the observations
+% Produces <Nobs> epochs that will be considered for the observations for 1 computation
 %
-% 1. Inputs:
+% 1.Inputs:
 %    Nobs : Nb.of observation epochs to be output for OD computation
 %    et0  : current date on the actual trajectory -in Julian Dates)
 %    TS   : Nx2 matrix, Nx(MJD_day, seconds_in_day), dates where the measurement sampling changes
 %    dt   : (N-1)x3 matrix, with dt1, dt2, dt3, intervals (in hours) between measurements after "ii"
 %
-% 2. Outputs:
-%   epochs : Nobs-vector in decimal Julian Days (at ii, ii+dt1, ii+dt1+dt2, ii+dt1+dt2+dt3)
+% 2.Outputs:
+%    epochs : Nobs-vector in decimal Julian Days (at ii, ii+dt1, ii+dt1+dt2, ii+dt1+dt2+dt3)
 
 
 function epochs = slctEpochs (Nobs, et0, TS, dt)
 epochs = double(zeros(1,Nobs));
 MJD_0=2400000.5;
 SEC_0=86400.;
-% THESIS : considérer jour sideral ou jour solaire? (ici jour solaire)
 
 % T: conversion of TS (VTS format) into decimal Julian Day
 T=TS(:,1)+MJD_0+TS(:,2)/SEC_0;

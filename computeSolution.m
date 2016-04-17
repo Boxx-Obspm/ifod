@@ -1,18 +1,20 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
 %Version & Date:
-%                  Vxxx dd-mm-2016
+%                  V2.2 02-04-2016
+%                  - fix bugs (CSi vs. SCi for matrix D)
+%                  - fix bugs (in Y computation to consider "modulo")
 %                  - new notations for A and B matrices (tech.note 2016)
-%                  - re-written from annul_grad, Calculation_C_D, Calculation_Y_Z
 %                  - inputs: 4 observables and predictions only
+%                  (re-written from annul_grad, Calculation_C_D, Calculation_Y_Z)
 %                  V2.1 03-03-2016 (dd-mm-yyyy) Boris Segret
 %                  - *no* call to reference_trajectory.m
 %                  - *no* changes of the inputs
 %                  until V2 11-09-2015 Oussema SLEIMI & Tristan Mallet
-%CL=1
+%CL=2
 %
-% ifod algorithm: <reconstructed_shift> is estimated from the on-board measured
-% directions of a foreground body compared with the expected directions.
+% ifod algorithm: <reconstructed_shift> (X) is estimated from the on-board measured
+% directions of foreground bodies compared with the expected directions of these bodies.
 %
 % Inputs:
 %     et   = 4x1, double matrix, 4 epoch times (in decimal days)
@@ -30,7 +32,7 @@
 
 function [X,A,B,cd] = computeSolution (et, ob, pr, algo)
 
-tci=cputime();
+tci=cputime(); % intitialization of CPU time measurement
 
 [C,D] = Calculation_CD(et, pr);
 [Y]   = Calculation_YZ(pr(:,1:2), ob, D);
@@ -62,28 +64,6 @@ for k=1:19
  B(k)=p;
 end
 
-% #scale matrix
-% 
-% #S=[ 1, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,   0,   0,   0;
-% #    0, 1, 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,   0,   0,   0;
-% #  0, 0, 1,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,    0,    0,    0,   0,   0,   0;
-% #    0, 0, 0,  1,  0,  0,  0,  0,  0,  0,  0,  0,   0, 0,    0,    0,   0,   0,   0;
-% #    0, 0, 0,  0,  1,  0,  0,  0,  0,  0,  0,  0,   0, 0,    0,    0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  1,  0,  0,  0,  0,  0,  0,   0, 0,     0,    0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  1,  0,  0,  0,  0,  0,   0,    0, 0,    0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  1,  0,  0,  0,  0,   0,    0, 0,    0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  1,  0,  0,  0,   0,    0,  0,    0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  1,  0,  0,   0,    0,    0, 0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  1,  0,   0,    0,    0, 0,   0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,  1,   0,    0,    0,  0,   0,   0,   0;
-% #    0, 0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0,   1,    0,    0,    0, 0,   0,   0;
-% #    0, 0, 0,  0, 0,  0,  0,  0,  0,  0,  0,  0,   0,    1,    0,    0,   0, 0,   0;
-% #    0, 0, 0,  0,  0, 0,  0,  0,  0,  0,  0,  0,   0,    0,    1,    0,   0,   0, 0;
-% #    0, 0, 0,  0,  0,  0, 0,  0,  0,  0,  0,  0,   0,    0,    0,    1, 0,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  0, 0,  0,  0,   0,    0,    0,    0, 1/1000,   0,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0, 0,  0,   0,    0,    0,    0,   0, 1/1000,   0;
-% #    0, 0, 0,  0,  0,  0,  0,  0,  0,  0,  0, 0,   0,    0,    0,    0,   0,   0, 1/1000];
-
 switch (algo)
     case 'PINV'	%we solve the problem by inversion.
     %X=pinv(A)*(-B');
@@ -91,9 +71,9 @@ switch (algo)
     otherwise
     %	case 'FMIN'	%we solve the problem by using fminunc
 
-    %	case 'MC'
+    %	case 'MC' % Monte Carlo => cannot be covered aat this level (in upper algorithm)
 
-    %	case 'SD' 	
+    %	case 'SD' % sttepest descent => to come later
 end
 tcf=cputime();
 cd=(tcf-tci)*1000.; % CPU time in milliseconds
