@@ -1,13 +1,14 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
 %Version & Date:   V1.1 09-04-2016 (dd/mm/yyyy)
-%                  - fix longitude values as produced by Trajectory Solver until v.XXX
+%                  REMAINING ISSUE: still a bug but management of longitudes has got a temporary fix
+%                  - fix longitude values as produced by Trajectory Solver until v.2015
 %                  - format for VTS
 %CL=2
 %Version & Date:
 %                  V1 02-04-2016 (dd/mm/yyyy) Boris Segret
 %
-% This program reads the Ephemeris data as produced by TS until version XXXX, corrects
+% This program reads the Ephemeris data as produced by TS until versions of 2015, corrects
 % the data and formats the date column into 2-column VTS-dates, then produced a
 % "_vts.eph" suffixed file.
 %

@@ -1,8 +1,8 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-%Version & Date:   V1.0 09-04-2016 (dd/mm/yyyy)
+%Version & Date:   V1.1 10-04-2016 (dd/mm/yyyy)
 %                  - produce Ephemeris in VTS-Format for a given body (target) from a given trajectory (source)
-%CL=0
+%CL=2
 %Version & Date:
 %                  V1.0 09-04-2016 (dd/mm/yyyy) Boris Segret
 %

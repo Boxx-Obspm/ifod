@@ -1,4 +1,4 @@
-% Production scenario simplifie
+% Production scenarios simplifies
 % Author: Boris Segret
 % v.1.8, 02/04/2016
 % CL=2
@@ -7,6 +7,7 @@
 % - produce a rectilinear trajectory from 1 to 5 AU at *constant* velocity
 % - produce the associated ephemerides of N objects
 % - displays the scenario in .eps / .pdf
+% REMAINING ISSUE : management of the longitudes to be checked
 
 AU=150000000.;      % Astronomical Unit
 day=86400.;         % 1 day in seconds

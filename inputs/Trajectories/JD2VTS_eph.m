@@ -1,9 +1,9 @@
 % Production scenario simplifie
 % Author: Boris Segret
-% v.1, 10/04/2016
-% CL=1
+% v.1.1, 17/04/2016
+% CL=0 <=== !!
 
-% Convert a JD-dated trajectory file into VTS MJD dated and 8-column file
+% Converts a JD-dated trajectory file into VTS MJD dated and 8-column file
 
 function outs = JD2VTS_eph(fpath)
 v_inputs = '2.0';
@@ -35,7 +35,7 @@ while 1
         break;
     end;
 end;
-data = fscanf(f1,'%f %f %f %f %f %f %f %f %f %f %f %f', [4 inf]);
+data = fscanf(f1,'%f %f %f %f %f %f %f %f %f %f %f %f', [12 inf]);
 data = data';
 fclose(f1);
 
