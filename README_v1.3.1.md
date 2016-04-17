@@ -9,7 +9,7 @@
 # F/: see technical note BIRDY NAV-002 for details
 
 # Content Reference:
-% own routines:
+# own routines:
 # - runifod.m, v1.1
 # - slctEpochs.m, v1.3
 # - readEphem.m, v3.1
