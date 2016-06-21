@@ -30,7 +30,7 @@ row #08+2*Ne : <Start> <Intervals> <Stop> of computation (in time steps, uint32)
 
 META_STOP
 #-----------------------------
-EtoM-58122
+EtoM-58122+Y
 #-----------------------------
 # Reference trajectory:
 ./Trajectories/EME/58122+SOI_v6.4_jdv000_312_vts.xyzv
@@ -38,21 +38,21 @@ EtoM-58122
 JUPITER    ./Trajectories/EME/Jupiter_jdv000.eph
 CERES      ./Trajectories/EME/Ceres_jdv000.eph
 EARTH      ./Trajectories/EME/Earth_jdv000.eph
-#MARS       ./Trajectories/EME/Mars_jdv000.eph
-SATURN     ./Trajectories/EME/Saturn_jdv000.eph
+MARS       ./Trajectories/EME/Mars_jdv000.eph
+#SATURN     ./Trajectories/EME/Saturn_jdv000.eph
 #-----------------------------
 # Actual trajectory to be compared with Reference Trajectory:
 ./Trajectories/EME/T0+jdv_y-axis/58122+SOI_v6.4_jdv010_312_vts.xyzv
 JUPITER    ./Trajectories/EME/T0+jdv_y-axis/Jupiter_jdv010.eph
 CERES      ./Trajectories/EME/T0+jdv_y-axis/Ceres_jdv010.eph
 EARTH      ./Trajectories/EME/T0+jdv_y-axis/Earth_jdv010.eph
-#MARS       ./Trajectories/EME/T0+jdv_y-axis/Mars_jdv010.eph
-SATURN     ./Trajectories/EME/T0+jdv_y-axis/Saturn_jdv010.eph
+MARS       ./Trajectories/EME/T0+jdv_y-axis/Mars_jdv010.eph
+#SATURN     ./Trajectories/EME/T0+jdv_y-axis/Saturn_jdv010.eph
 #-----------------------------
 # Computed comparisons
 PINV
 ./timeSteps_stable
-./Trajectories/EME/EtoM-58122+jdv010
-1, 4, 900
+E2M-58122+Y_stat
+1, 10, 900
 #-----------------------------
 
