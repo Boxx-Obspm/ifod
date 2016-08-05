@@ -1,1 +1,1 @@
-datapath='./inputs/'; fscenario='scenario_EME';
+datapath='./inputs/'; fscenario='EME_mini';

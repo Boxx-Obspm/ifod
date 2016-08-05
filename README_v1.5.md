@@ -1,6 +1,6 @@
 # ifod
 # In-Flight Orbit Determination in deep-space from optical sensors
-# Version & Date:   V1.4 15-May-2016, Boris Segret
+# Version & Date:   V1.5 05-Aug-2016, Boris Segret
 # CL=2
 #
 # runifod.m : main program, for MATLAB or OCTAVE
@@ -9,6 +9,11 @@
 # F/: see technical note BIRDY NAV-002 for details
 
 # Content Reference:
+
+# Test Dataset => run "ifod" in Octave or Matlab from its local path to test it runs properly
+# - ./inputs/EME_mini : scenario
+# - ./inputs/Trajectories/EME/* : *.eph, .xyzv, ./T0+jdv_y-axis/<same files with shift>
+
 # own routines:
 # - runifod.m, v1.3 (+ runifod_MCdrivers.m, runifod_scenario.m)
 # - slctEpochs.m, v1.3
@@ -26,7 +31,5 @@
 # - ./inputs/Trajectories/prodYline.m, v1.8
 # - ./inputs/Trajectories/figures.m (11/04/2016)
 # - ./inputs/Trajectories/prodEME.m, v1.1
-# data:
-# - ./inputs/scenario and associated data & files
 # external routines:
 # - ../ifod_eval/stat_extraction.m, v3.0

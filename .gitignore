@@ -6,9 +6,3 @@
 octave-workspace
 *.m~
 useless_*
-*.xyzv
-*.eph
-inputs/Trajectories/cas_Y
-inputs/Trajectories/EME
-inputs/E2M*
-inputs/Y-line*
