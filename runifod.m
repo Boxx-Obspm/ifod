@@ -1,6 +1,8 @@
 %%----------------HEADER---------------------------%%
 % Author:           Boris Segret
 % Version & Date:
+%                   V1.4 06-08-2016 (dd-mm-yyyy)
+%                   - Adaptation to N=5 measurements
 %                   V1.3 01-05-2016 (dd-mm-yyyy)
 %                   - Monte-Carlo analysis to assess algorithm sensitivity (extraction & plots)
 %                   - Time-sampling and Observation accuracy as input for batch running
@@ -9,31 +11,20 @@
 %                   - it assumes "./inputs/scenario" file provides evrything necessary
 %                   - it assumes "../ifod_eval/data_extraction.m" iterates for all trajectory points
 %                   - it runs standard plots for quick analyses of the results
-% CL=2
+% CL=1
 
 clear;
 codPath = '../ifod_eval';
-%scnPath = './inputs/';
-%scnFile = strcat(scnPath, 'scenario');
-
 addpath(codPath);
 runifod_scenario; % can be easily modfied from a Bash script
 
-% data_extraction : single computation per time step
-%data_extraction; 
-
 %-----------------------------------------
-Nobs = 4;
-% unaccuracy on the optical observation (likely related to time-sampling)
-% unaccuracy on the photocenter: not included yet
-% unaccuracy on the time: not included yet
+Nobs = 5;
 
-% stat_extraction : series of computations per time step
-% sigma_obs (arcsecs) : accuracy of the optical measurements
-% dtConst (hours) : time-sampling between measurements
+% stat_extraction : MC series per time step, inputs in runifod_MCdrivers.m
+% - sigma_obs (arcsecs) : accuracy of the optical measurements
+% - dtConst (hours) : time-sampling between measurements
+% - pfix : postfix for the results
 runifod_MCdrivers; % can be easily modfied from a Bash script
-stat_extraction;
+stat_extraction;   % located in codPath
 %-----------------------------------------
-
-%data_plots_full(outputs);
-%data_plots_full;
