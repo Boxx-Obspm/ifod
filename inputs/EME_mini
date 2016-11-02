@@ -52,6 +52,6 @@ MARS       ./Trajectories/EME/T0+jdv_y-axis/Mars_jdv010.eph
 # Computed comparisons
 PINV
 ./timeSteps_stable
-EME_a
+EME_out
 1, 10, 900
 #-----------------------------
