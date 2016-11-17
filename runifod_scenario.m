@@ -1,1 +1,1 @@
-datapath='./inputs/'; fscenario='Y+Y';
+datapath='./inputs/'; fscenario='EME_mini';

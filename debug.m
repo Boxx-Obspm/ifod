@@ -1,18 +1,19 @@
 % iDebug==0; % desactiviation du mode debug
 % ------------
 if iDebug==1
-    rex = []; rme = []; res = []; ves = [];
+    rex = []; rme = []; res = []; ves = []; tst = []; tst0=epochs(3);
     lKg = []; ldP = [];
 end
 % ------------
 if iDebug==2
     rex = [rex; (refLoc + Xexp(7:9))'];   % debug
     rme = [rme; (refLoc + X(7:9))'];      % debug
-    res = [res; nState(1:3)'.*fx];       % debug
+    res = [res; refLoc' + nState(1:3)'.*fx];       % debug
     ves = [ves; norm(nState(4:6)).*fv];  % debug
+    tst = [tst; (epochs(3)-tst0).*24];
     lKg = [lKg; Kg];
     ldP = [ldP; det(pSigma)];
-    fprintf('%i ', floor(norm(pState(1:3).*fx-Xexp(7:9))));
+%     fprintf('%i ', floor(norm(pState(1:3).*fx-Xexp(7:9))));
 end
 % ------------
 if iDebug==3
@@ -79,7 +80,7 @@ if iDebug==3
     % chronogrammes
     moyrres = sum(rres(10:20,:))/11;
     figure(102); clf;
-    subplot(2,2, [1 2]);
+    subplot(3,2, [1 2]);
     plot(rres(:,1), 'rx-'); hold on;
     plot(rres(:,2), 'gx-');
     plot(rres(:,3), 'bx-');
@@ -88,13 +89,17 @@ if iDebug==3
     plot(rrme(:,3), 'bx:');
     ylim([min(min(rrme)) max(max(rrme))]);
     legend('dX (-KF, ..3D-OD)', 'dY (-KF, ..3D-OD)', 'dZ (-KF, ..3D-OD)');
-    plot([0 nKF], [moyrres(1) moyrres(1)], 'r-');
-    plot([0 nKF], [moyrres(2) moyrres(2)], 'g-');
-    plot([0 nKF], [moyrres(3) moyrres(3)], 'b-');
-    subplot(2,2, [3 4]);
+%     plot([0 nKF], [moyrres(1) moyrres(1)], 'r-');
+%     plot([0 nKF], [moyrres(2) moyrres(2)], 'g-');
+%     plot([0 nKF], [moyrres(3) moyrres(3)], 'b-');
+    subplot(3,2, [3 4]);
     semilogy(lKg, 'b-'); hold on;
     semilogy(ldP, 'b:');
+    ylim([1e-5 1e5]);
     legend('Kalman gain, det(K''*K)', 'det(P)');
+    subplot(3,2, [5 6]);
+    plot(ves, 'kx-'); hold on;
+    legend('Velocity (km/s)');
 end
 
 % ------------
