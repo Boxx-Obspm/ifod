@@ -28,10 +28,10 @@
 %  observd = extractObs(epochs, nbofBodies, NbLE1, TimeListE1, lat1, long1);
 
 
-function observd = extractObs(epochs, nbofBodies, NbLE1, TimeList1, lat1, long1)
+function observd = extractObs(epochs, bodies, NbLE1, TimeList1, lat1, long1)
 
 for ii=1:length(epochs)
-    i=1+mod(ii-1,nbofBodies);
+    i=bodies(ii);
     out_lat1(ii)  = interp1(TimeList1(i,1:NbLE1(i)), lat1(i,1:NbLE1(i)),  epochs(ii), 'linear');
     out_long1(ii) = interp1(TimeList1(i,1:NbLE1(i)), long1(i,1:NbLE1(i)), epochs(ii), 'linear');
 end

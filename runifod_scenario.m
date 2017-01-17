@@ -1,1 +1,1 @@
-datapath='./inputs/'; fscenario='EME_mini';
+datapath='../ifod_tests/'; fscenario='scenario'; scnRealistic = false;

@@ -1,8 +1,8 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-version = '3.3';
+version = '3.4';
 % Version & Date:
-%                  V3.3 03-11-2016 (dd-mm-yyyy)
+%                  V3.4 8-12-2016 (dd-mm-yyyy)
 %                  - forked from ../ifod_eval/stat_extraction.m
 %                  - Introduction of a 2-step Kalman Filter
 % CL=2 (v3.2)
@@ -38,30 +38,32 @@ version = '3.3';
 % dt=dtConst.*[ones(1,Nobs-1); zeros(1,Nobs-1)];
 % epochs  = slctEpochs(Nobs, TimeList1(ii), T, dt);
 
-nKF = 500;
-% (prepare for STEP 2)
-% alternative:
-% (dtConst in hours)
-dtKF = 86400.*0.20/24; % in seconds (measurement of all planets once an hour, with 5 planets)
-epochs(1) = TimeList1(ii) - 4.*dtConst/24 - dtKF/86400.;
-epochs(2) = epochs(1) + dtConst/24;
-epochs(3) = epochs(2) + dtConst/24;
-epochs(4) = epochs(3) + dtConst/24;
-epochs(5) = epochs(4) + dtConst/24;  
+for ij = Nobs:nKF
+  epochs(1:Nobs)   = obstime(ik+ij-Nobs+1:ik+ij);
+  measur(1:Nobs,:) = measurd(ij-Nobs+1:ij,:);
+  predic(1:Nobs,:) = predict(ij-Nobs+1:ij,:);
+  bodies(1:Nobs)   = obsbody(ij-Nobs+1:ij);
+%       oneOD;
 
-refState = [ interp1(TimeList0, coord0(:,1), epochs(3), 'linear'); ...
-           interp1(TimeList0, coord0(:,2), epochs(3), 'linear'); ...
-           interp1(TimeList0, coord0(:,3), epochs(3), 'linear'); ...
-           interp1(TimeList0, vel0(:,1),   epochs(3), 'linear'); ...
-           interp1(TimeList0, vel0(:,2),   epochs(3), 'linear'); ...
-           interp1(TimeList0, vel0(:,3),   epochs(3), 'linear') ];
-refLoc = [0;0;0];
 
-iDebug=1; debug;
-for iKF=1:nKF
+% epochs(1) = TimeList1(ii) - 4.*dtConst/24 - dtKF/86400.;
+% epochs(2) = epochs(1) + dtConst/24;
+% epochs(3) = epochs(2) + dtConst/24;
+% epochs(4) = epochs(3) + dtConst/24;
+% epochs(5) = epochs(4) + dtConst/24;  
+% 
+% refState = [ interp1(TimeList0, coord0(:,1), epochs(3), 'linear'); ...
+%            interp1(TimeList0, coord0(:,2), epochs(3), 'linear'); ...
+%            interp1(TimeList0, coord0(:,3), epochs(3), 'linear'); ...
+%            interp1(TimeList0, vel0(:,1),   epochs(3), 'linear'); ...
+%            interp1(TimeList0, vel0(:,2),   epochs(3), 'linear'); ...
+%            interp1(TimeList0, vel0(:,3),   epochs(3), 'linear') ];
+% refLoc = [0;0;0];
+% 
+% for iKF=1:nKF
 
     % STEP 2) Successive epochs T1, T2, T3, T4, T5 are built to be separated by dtConst
-    epochs = epochs + dtKF/86400.;
+%     epochs = epochs + dtKF/86400.;
     pRefLoc = refLoc;
     refLoc = - refState(1:3) + [ ...
         interp1(TimeList0, coord0(:,1), epochs(3), 'linear'); ...
@@ -77,35 +79,33 @@ for iKF=1:nKF
     
     % STEP 3) Optical "observations" are built with noise (sigma_obs) for Ti
     
-    % -long1/-long0 avec les donnees reelles (bug!)
-    observd = extractObs(epochs, nbofBodies, NbLE1, TimeListE1, lat1, -long1);
-    predict = prepareObs(epochs, nbofBodies, NbLE0, TimeListE0, lat0, -long0, dist0);
-    % +long1/+long0 avec les donnees simulees (bug!)
-%     predict = prepareObs(epochs, nbofBodies, NbLE0, TimeListE0, lat0, long0, dist0);
-%     observd = extractObs(epochs, nbofBodies, NbLE1, TimeListE1, lat1, long1);
-    err_obs = normrnd(0., sigma_obs/3600., [nbCycle 2*Nobs]); % AGAIN ! (see stat_extract)
-    err_obs = [err_obs(:,1) err_obs(:, 2)./cosd(observd(1,1)) ...
-               err_obs(:,3) err_obs(:, 4)./cosd(observd(2,1)) ...
-               err_obs(:,5) err_obs(:, 6)./cosd(observd(3,1)) ...
-               err_obs(:,7) err_obs(:, 8)./cosd(observd(4,1)) ...
-               err_obs(:,9) err_obs(:,10)./cosd(observd(5,1)) ];
-    measured = observd + [err_obs(nm,1:2); err_obs(nm,3:4); ...
-        err_obs(nm,5:6); err_obs(nm,7:8); err_obs(nm,9:10)];
+%     % -long1/-long0 avec les donnees reelles (bug!)
+%     observd = extractObs(epochs, nbofBodies, NbLE1, TimeListE1, lat1, -long1);
+%     predict = prepareObs(epochs, nbofBodies, NbLE0, TimeListE0, lat0, -long0, dist0);
+%     % +long1/+long0 avec les donnees simulees (bug!)
+% %     predict = prepareObs(epochs, nbofBodies, NbLE0, TimeListE0, lat0, long0, dist0);
+% %     observd = extractObs(epochs, nbofBodies, NbLE1, TimeListE1, lat1, long1);
+%     err_obs = normrnd(0., sigma_obs/3600., [nbCycle 2*Nobs]); % AGAIN ! (see stat_extract)
+%     err_obs = [err_obs(:,1) err_obs(:, 2)./cosd(observd(1,1)) ...
+%                err_obs(:,3) err_obs(:, 4)./cosd(observd(2,1)) ...
+%                err_obs(:,5) err_obs(:, 6)./cosd(observd(3,1)) ...
+%                err_obs(:,7) err_obs(:, 8)./cosd(observd(4,1)) ...
+%                err_obs(:,9) err_obs(:,10)./cosd(observd(5,1)) ];
 
     % STEP 4) Analytical OD is run, the 3D-solution for T3 is kept, called M(T3)
-    [X,A,B,elapsed_time] = computeSolution(epochs, measured, predict, algo);
+    [X,A,B,elapsed_time] = computeSolution(epochs, measur, predic, algo);
 %   il faut extraire le delta-acceleration de Xexp (pour l'instant fait ici)
 %   plus tard il faudra l'extraire de refTrajectory
     Xexp = expectedOD (TimeList0, NbLE0, TimeListE0, dist0, coord0, vel0, ...
-                     epochs, nbofBodies, ...
+                     epochs, bodies, ...
                      TimeList1, NbLE1, TimeListE1, dist1,coord1,vel1);
-    if iKF==1
+    if ij == Nobs
         % STEP 1) KF initizing at epochs(1)
         % dimensionless approach
         isInit=true;
-        fx = 1000.;  sx = 1000./fx; % km (distance factor and accuracy)
-        fv = 1.;  sv = 0.0001/fv; % km/s (velocity factor and accuracy)
-        fa = 1E-7; sa = 0.01*max([norm(accEstimate) 0])./fa; % km/s^2 (acceleration factor and accuracy)
+        fx = 1000.;  sx = 500./fx; % km (distance factor and measurement accuracy)
+        fv = 1.;  sv = 0.0001/fv; % km/s (velocity factor and measurement accuracy)
+        fa = 1E-7; sa = 0.00000001*max([norm(accEstimate) 0])./fa; % km/s^2 (acceleration factor and accuracy)
         ft = 3600.;  % in seconds (time factor)
 %         pState=[(refLoc + X(7:9))./fx; ...
 %                  refState(4:6)./fv; ...
@@ -127,11 +127,20 @@ for iKF=1:nKF
     Z = X(7:9)./fx;       % position wrt refState (unit: in fx)
 %     [nState, nSigma] = kf(isInit, pState, pSigma, dtKF/st, u, m, sigma_acc, sigma_dist);
 % --------> function [uX, uP]=kf(isInit, eX, eP, dt, Z, sx,sv,sa)
-    [nState, nSigma, Kg] = kf(isInit, pState, pSigma, dtKF/ft, Z, sx,sv,sa);
+    update = true;
+    [nState, nSigma, Kg] = kf(isInit, update, pState, pSigma, dtKF/ft, Z, sx,sv,sa);
     iDebug=2; debug;
     pState = nState; % new state vector
     pSigma = nSigma; % new covariance matrix
-end
-% X(7:9) = (pState(1:3)-refLoc).*fx;
+    if ij == nKF
+      update = false; dt = epochs(5)-epochs(3);
+      [nState, nSigma, Kg] = kf(isInit, update, pState, pSigma, dt/ft, Z, sx,sv,sa);
+      iDebug=3; debug;
+      X(13:15) = (nState(1:3)).*fx;
+    end
+% end
+% the returned X(7:9) is the last KF-solution based on measurement at t3
+% the returned X(13:15) is the last predicted KF-solution at t5
 X(7:9) = (pState(1:3)).*fx;
-iDebug=3; debug;
+
+end

@@ -27,10 +27,10 @@
 %     out_long0     = 4x1 double float vector giving the interpolated longitude of Jupiter seen from the reference trajectory.
 %     out_distance0 = 4x1 double float vector giving the interpolated distance between BIRDY and Jupiter from the reference trajectory.
 
-function predict = prepareObs(epochs, nbofBodies, NbLE0, TimeList0, lat0, long0, dist0)
+function predict = prepareObs(epochs, bodies, NbLE0, TimeList0, lat0, long0, dist0)
 
 for ii=1:length(epochs)
-  i=1+mod(ii-1,nbofBodies);
+  i=bodies(ii);
   out_lat0(ii)  = interp1(TimeList0(i,1:NbLE0(i)), lat0(i,1:NbLE0(i)),  epochs(ii), 'linear');
   out_long0(ii) = interp1(TimeList0(i,1:NbLE0(i)), long0(i,1:NbLE0(i)), epochs(ii), 'linear');
   out_distance0(ii)  = interp1(TimeList0(i,1:NbLE0(i)), dist0(i,1:NbLE0(i)),  epochs(ii), 'linear');
@@ -39,4 +39,3 @@ end
 predict = [out_lat0' out_long0' out_distance0'];
 
 end
-

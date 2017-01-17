@@ -1,6 +1,8 @@
 %%----------------HEADER---------------------------%%
 % Author:           Boris Segret
 % Version & Date:
+%                   V1.5 15-01-2017 (dd-mm-yyyy)
+%                   - all driven parameters gathered here (tests & real jobs)
 %                   V1.4 06-08-2016 (dd-mm-yyyy)
 %                   - Adaptation to N=5 measurements
 %                   V1.3 01-05-2016 (dd-mm-yyyy)
@@ -14,17 +16,32 @@
 % CL=1
 
 clear;
-codPath = '../ifod_eval';
-addpath(codPath);
-runifod_scenario; % can be easily modfied from a Bash script
-
-%-----------------------------------------
+tests = true;
+runInOctave = false;
 Nobs = 5;
 
-% stat_extraction : MC series per time step, inputs in runifod_MCdrivers.m
-% - sigma_obs (arcsecs) : accuracy of the optical measurements
-% - dtConst (hours) : time-sampling between measurements
-% - pfix : postfix for the results
-runifod_MCdrivers; % can be easily modfied from a Bash script
+% TEST / DEBUG
+if (tests)
+    datapath='../ifod_tests/'; % runifod_scenario.m
+    fscenario='scenario';      % runifod_scenario.m
+    scnRealistic = false;      % runifod_scenario.m
+    sigma_obs = 0.1;           % runifod_MCdrivers.m
+    nKF = 10;                  % runifod_MCdrivers.m
+    nbCycles= 4;               % runifod_MCdrivers.m
+    pfix='_E-1,5x10h,tests';   % runifod_MCdrivers.m
+else
+    runifod_scenario; % can be easily modfied from a Bash script
+    % stat_extraction : MC series per time step, inputs in runifod_MCdrivers.m
+    % - sigma_obs (arcsecs) : accuracy of the optical measurements
+    % - dtConst (hours) : time-sampling between measurements
+    % - pfix : postfix for the results
+    runifod_MCdrivers; % can be easily modfied from a Bash script
+    dtConst =  1;
+end
+
+%-----------------------------------------
+
+codPath = '../ifod_eval';
+addpath(codPath);
 stat_extraction;   % located in codPath
 %-----------------------------------------

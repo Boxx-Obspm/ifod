@@ -1,10 +1,1 @@
-%  sigma_obs = 0.   ; dtConst =  6; pfix='_0asec,06h';
-% sigma_obs = 15.  ; dtConst =  6; pfix='_15asec,06h';
-% sigma_obs = 15.  ; dtConst = 24; pfix='_15asec,24h';
-% sigma_obs = 1.0  ; dtConst =  6; pfix='_1asec,06h';
-% sigma_obs = 1.0  ; dtConst = 12; pfix='_1asec,12h';
-% sigma_obs = 1.0  ; dtConst = 24; pfix='_1asec,24h';
-  sigma_obs = 0.1  ; dtConst =  6; pfix='_E-1asec,06h';
-% sigma_obs = 0.1  ; dtConst = 24; pfix='_E-1asec,24h';
-%  sigma_obs = 0.001 ; dtConst =  6; pfix='_E-3asec,06h';
-%  sigma_obs = 0.00001 ; dtConst =  6; pfix='_E-5asec,06h';
+    sigma_obs = 0.1; nKF = 10; nbCycles= 5; pfix='_E-1,5x10h,tests';
