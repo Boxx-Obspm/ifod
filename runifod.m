@@ -16,7 +16,7 @@
 % CL=1
 
 clear;
-tests = true;
+tests = false;
 runInOctave = false;
 Nobs = 5;
 
@@ -28,7 +28,7 @@ if (tests)
     sigma_obs = 0.1;           % runifod_MCdrivers.m
     nKF = 10;                  % runifod_MCdrivers.m
     nbCycles= 4;               % runifod_MCdrivers.m
-    pfix='_E-1,5x10h,tests';   % runifod_MCdrivers.m
+    pfix='_E-1,4x10h,tests';   % runifod_MCdrivers.m
 else
     runifod_scenario; % can be easily modfied from a Bash script
     % stat_extraction : MC series per time step, inputs in runifod_MCdrivers.m
