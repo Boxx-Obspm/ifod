@@ -1,22 +1,25 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-version = '3.5';
+version = '3.6';
 % Version & Date:
+%                  V3.6 27-01-2017 (dd-mm-yyyy)
+%                  - minor changes and comments
 %                  V3.5 24-01-2017 (dd-mm-yyyy)
 %                  - forked from ../ifod_eval/stat_extraction.m
 %                  - Introduction of a 2-step Kalman Filter
 %                  - dimensionless factors in oneOD_factors.m
-% CL=2 (v3.2)
-%
-%
+%                  V3.2 was in CL=2
+% CL=2 (v3.6)
+
 % The program simulates a full on-board determination process at a given epoch.
-% 1) The KF is initized at the epoch T5-(2*dtConst)-(nKF*dtKF)
+% 1) The KF is initized at the epoch NOW-(2*dtConst)-(nKF*dtKF)
 % 2) Successive epochs T1, T2, T3, T4, T5 are built to be separated by dtConst
 % 3) Optical "observations" are built with noise (sigma_obs) for Ti
 % 4) Analytical OD is run, the 3D-solution for T3 is kept, called M(T3)
 % 5) M(T3) is injected in the KF as measurement, KF provides a new estimate E(T3)
 % 6) T5 is incremented by dt_KF
-% 7) steps 2) to 6) are iterated nKF times and last E(T3) is returned
+% 7) steps 2) to 6) are iterated nKF times
+% 8) the last E(T3) and E(NOW) are returned
 
 % The reference trajectory with its ephemerides are known, the observations are
 % built in a subroutine that accesses the actual trajectory, not known by
@@ -29,6 +32,7 @@ version = '3.5';
 % O/
 %    <results> comparison between computed and expected results (VTS format,
 %              prefixed as requested in <scenario>)
+% F/ oneOD_factors.m is called and must be present in the same directory
 
 %-----------------------------------------
 
@@ -84,10 +88,10 @@ for ij = Nobs:nKF
   pState = nState; % new state vector
   pSigma = nSigma; % new covariance matrix
   if ij == nKF
-      update = false; dt = epochs(5)-epochs(3);
+      update = false; dt = 86400.*(epochs(5)-epochs(3));
       [nState, nSigma, Kg] = kf(isInit, update, pState, pSigma, dt/ft, Z, sx,sv,sa);
       iDebug=3; debug;
-      X(13:15) = (nState(1:3)).*fx;
+      X(3*Nobs-2:3*Nobs) = (nState(1:3)).*fx;
   end
 % the returned X(7:9) is the last KF-solution based on measurement at t3
 % the returned X(13:15) is the last predicted KF-solution at t5

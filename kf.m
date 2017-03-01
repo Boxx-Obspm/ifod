@@ -1,6 +1,14 @@
-%   go see his tutorials : http://home.wlu.edu/~levys/kalman_tutorial/ 
+%%----------------HEADER---------------------------%%
+% Author:           Boris Segret
+% Version & Date:
+%                   V1.0 11-12-2017 (dd-mm-yyyy)
+%                   - part of the IFOD debugging
+%                   - called from various location of ifod_eval/stat_extraction and ifod/oneOD.m
+%                   - stores the elementary results at KF level or MC cycle level
+% CL=2
+%	go see his tutorials : http://home.wlu.edu/~levys/kalman_tutorial/ 
+%	Linear kalman filter applied on Orbit Determination
 
-%Linear kalman filter applied on Orbit Determination
 function [uX, uP, dK]=kf(isInit, update, eX, eP, dt, Z, sx,sv,sa)
 
 % State-transition model:
