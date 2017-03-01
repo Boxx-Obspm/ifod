@@ -13,10 +13,13 @@
 %                   - it assumes "./inputs/scenario" file provides evrything necessary
 %                   - it assumes "../ifod_eval/data_extraction.m" iterates for all trajectory points
 %                   - it runs standard plots for quick analyses of the results
-% CL=1
+% CL=2
+
+% F/ runifod_MCdrivers.m, runifod_scenario.m are called if non-test run
 
 clear;
 tests = false;
+% tests = true;
 runInOctave = false;
 Nobs = 5;
 
@@ -24,11 +27,12 @@ Nobs = 5;
 if (tests)
     datapath='../ifod_tests/'; % runifod_scenario.m
     fscenario='scenario';      % runifod_scenario.m
-    scnRealistic = false;      % runifod_scenario.m
-    sigma_obs = 0.1;           % runifod_MCdrivers.m
-    nKF = 10;                  % runifod_MCdrivers.m
+    scnRealistic = true;      % runifod_scenario.m
+    sigma_obs = 0.1;         % runifod_MCdrivers.m
+    nKF = 100;                  % runifod_MCdrivers.m
+    dtKF = 86400.*1/24;        % in seconds (assuming measurement of all planets once an hour)
     nbCycles= 4;               % runifod_MCdrivers.m
-    pfix='_E-1,4x10h,tests';   % runifod_MCdrivers.m
+    pfix=['_E-1,' int2str(nbCycles) 'x' int2str(nKF) 'h,tests'];   % runifod_MCdrivers.m
 else
     runifod_scenario; % can be easily modfied from a Bash script
     % stat_extraction : MC series per time step, inputs in runifod_MCdrivers.m
@@ -36,7 +40,6 @@ else
     % - dtConst (hours) : time-sampling between measurements
     % - pfix : postfix for the results
     runifod_MCdrivers; % can be easily modfied from a Bash script
-    dtConst =  1;
 end
 
 %-----------------------------------------

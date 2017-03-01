@@ -1,3 +1,12 @@
+%%----------------HEADER---------------------------%%
+% Author:           Boris Segret
+% Version & Date:
+%                   V1.1 01-03-2017 (dd-mm-yyyy)
+%                   - part of the IFOD debugging
+%                   - called from various location of ifod_eval/stat_extraction and ifod/oneOD.m
+%                   - stores the elementary results at KF level or MC cycle level
+% CL=2
+
 % iDebug=0; % switch for debug mode
 graphs = false; % plots graphs
 writes = true; % save detailed data in binary format into <outputs>_bin
@@ -100,6 +109,12 @@ if iDebug==4
     fclose(fw);
    end
    if (graphs)
+    fprintf('X(x,y,z)\n');
+    fprintf('%7.1f %7.1f %7.1f: X(x,y,z)\n',X(1:3*Nobs));
+    fprintf('Xexp(x,y,z)\n');
+    fprintf('%7.1f %7.1f %7.1f: Xexp(x,y,z)\n',Xexp(1:3*Nobs));
+    fprintf('X-Xexp\n');
+    fprintf('%7.1f %7.1f %7.1f: X-Xexp\n',X(1:3*Nobs)-Xexp(1:3*Nobs));
     % chronogrammes
     figure(102); clf;
     subplot(4,3, [1 3]);
@@ -110,7 +125,7 @@ if iDebug==4
     plot(rrme(:,2), 'gx:');
     plot(rrme(:,3), 'bx:');
 %     ylim([min(min(rrme)) max(max(rrme))]);
-   ylim([-5*mmkf(nbPts*3/4) 5*mmkf(nbPts*3/4)]);
+   ylim([-2*mmkf(floor(nbPts*3/4)) 2*mmkf(floor(nbPts*3/4))]);
     title('Residuals dX, dY, dZ (km)');
     legend('dX (-KF, ..3D-OD)', 'dY (-KF, ..3D-OD)', ...
         'dZ (-KF, ..3D-OD)', 'Location', 'SouthWest');
@@ -119,14 +134,14 @@ if iDebug==4
     plot(dtrk, 'r-'); hold on;
     plot(dtrm, 'gx:');
 %     ylim([-2*std(dtrm) 2*std(dtrm)]);
-    ylim([-5*mmtk(nbPts*3/4) 5*mmtk(nbPts*3/4)]);
+    ylim([-2*mmtk(floor(nbPts*3/4)) 2*mmtk(floor(nbPts*3/4))]);
     plot(mmtk, 'r:'); plot(-mmtk, 'r:');
     title('Residual in transversal shift (km)');
     subplot(4,3, [7 9]);
     plot(dlgk, 'r-'); hold on;
     plot(dlgm, 'gx:');
 %     ylim([-2*std(dlgm) 2*std(dlgm)]);
-    ylim([-5*mmlk(nbPts*3/4) 5*mmlk(nbPts*3/4)]);
+    ylim([-2*mmlk(floor(nbPts*3/4)) 2*mmlk(floor(nbPts*3/4))]);
     plot(mmlk, 'r:'); plot(-mmlk, 'r:');
     title('Residual in longitudinal shift (km)');
 
