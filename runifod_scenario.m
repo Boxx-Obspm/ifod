@@ -1,2 +1,3 @@
-% datapath='../ifod_tests/'; fscenario='scenario'; scnRealistic = true;
-datapath='../cas_Y/'; fscenario='scnY+X'; scnRealistic = false;
+% datapath='../ifod_tests/datasets/'; fscenario='Y0_min'; scnRealistic = true;
+% datapath='../ifod_tests/datasets/'; fscenario='YY_min'; scnRealistic = false;
+datapath='../cas_Y/'; fscenario='scnY0'; scnRealistic = false;

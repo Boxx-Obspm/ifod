@@ -1,6 +1,9 @@
 %%----------------HEADER---------------------------%%
 % Author:           Boris Segret
 % Version & Date:
+%                   V1.6 27-03-2017 (dd-mm-yyyy)
+%                   - integrated "test" scenario
+%                   - key parameters gathered in this introduction runfile
 %                   V1.5 15-01-2017 (dd-mm-yyyy)
 %                   - all driven parameters gathered here (tests & real jobs)
 %                   V1.4 06-08-2016 (dd-mm-yyyy)
@@ -25,14 +28,14 @@ Nobs = 5;
 
 % TEST / DEBUG
 if (tests)
-    datapath='../ifod_tests/'; % runifod_scenario.m
-    fscenario='scenario';      % runifod_scenario.m
-    scnRealistic = true;      % runifod_scenario.m
+    datapath='../ifod_tests/datasets/'; % runifod_scenario.m
+    fscenario='Y0_min';      % runifod_scenario.m
+    scnRealistic = false;      % runifod_scenario.m
     sigma_obs = 0.1;         % runifod_MCdrivers.m
-    nKF = 100;                  % runifod_MCdrivers.m
-    dtKF = 86400.*1/24;        % in seconds (assuming measurement of all planets once an hour)
-    nbCycles= 4;               % runifod_MCdrivers.m
-    pfix=['_E-1,' int2str(nbCycles) 'x' int2str(nKF) 'h,tests'];   % runifod_MCdrivers.m
+    nKF = 8*24;                  % runifod_MCdrivers.m
+    dtKF = 3600./5.;        % in seconds (measurement of 5 planets per hour)
+    nbCycles= 10;               % runifod_MCdrivers.m
+    pfix=['_01as,' int2str(nbCycles) 'MCx' int2str(nKF) 'KF,tests'];   % runifod_MCdrivers.m
 else
     runifod_scenario; % can be easily modfied from a Bash script
     % stat_extraction : MC series per time step, inputs in runifod_MCdrivers.m

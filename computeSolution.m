@@ -1,6 +1,8 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
 %Version & Date:
+%                  V2.3.1 17-03-2017
+%                  - means added for debug & cpu performance monitoring
 %                  V2.3 09-08-2016
 %                  - Adaptations for N=5 measurements
 %                  - Dimensionless calculation
@@ -38,7 +40,8 @@ function [X,A,B,cd] = computeSolution (et, ob, pr, algo)
 N = 5; % Nb.of measurements
 % m = 6*N-3;
 % p = 4*N+6;
-tci=cputime(); % intitialization of CPU time measurement
+% tci=cputime(); % intitialization of CPU time measurement
+tci=toc; % intitialization of CPU time measurement
 
 [C,D] = Calculation_CD(et, pr);
 [Y]   = Calculation_YZ(pr(:,1:2), ob, D);
@@ -86,8 +89,10 @@ invU = blkdiag(pr(1,3).*eye(3), pr(2,3).*eye(3), pr(3,3).*eye(3), pr(4,3).*eye(3
     (pr(1,3)./Tmax).*eye(3), (pr(1,3)./(Tmax.^2)).*eye(3));
 X = invU * adimX;
 
-tcf=cputime();
+% tcf=cputime();
+tcf=toc;
 cd=(tcf-tci)*1000.; % CPU time in milliseconds
+%     fprintf('(ifod_kf) Inversion: %5.2f ms, ', cd);
 end
 
 %%------------------------------------------------------------------------------

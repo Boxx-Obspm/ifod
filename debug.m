@@ -1,6 +1,8 @@
 %%----------------HEADER---------------------------%%
 % Author:           Boris Segret
 % Version & Date:
+%                   V1.2 23-03-2017 (dd-mm-yyyy)
+%                   - adaptations to 5 *different* obs per KF step
 %                   V1.1 01-03-2017 (dd-mm-yyyy)
 %                   - part of the IFOD debugging
 %                   - called from various location of ifod_eval/stat_extraction and ifod/oneOD.m
@@ -18,13 +20,14 @@ writes = true; % save detailed data in binary format into <outputs>_bin
 % ------------
 if iDebug==1
   % memory allocations
-  nbPts=nKF-Nobs+1;
+%   nbPts=nKF-Nobs+1;
+  nbPts=nKF;
   ndebug=0;
   rex  = double(zeros(nbPts+1,3));
   rme  = double(zeros(nbPts+1,3));
   rkf  = double(zeros(nbPts+1,3));
   vkf  = double(zeros(nbPts+1,1));
-  tst  = double(zeros(nbPts+1,1)); tst0=epochs(3);
+%   tst  = double(zeros(nbPts+1,1)); tst0=epochs(3);
   lKg  = double(zeros(nbPts+1,1));
   ldP  = double(zeros(nbPts+1,1));
   dtrm = double(zeros(1,nbPts+1));
@@ -34,17 +37,25 @@ if iDebug==1
 end
 % ------------
 if iDebug==2
+%       fprintf('Inversion: %5.2f ms, ', elapsed_time);
+%       tci=toc;  
+      Xexp = expectedOD (TimeList0, NbLE0, TimeListE0, dist0, coord0, vel0, ...
+                         epochs, bodies, ...
+                         TimeList1, NbLE1, TimeListE1, dist1,coord1,vel1);
+%       tcf=toc;
+%       fprintf('Inversion: %5.2f ms, expectedOD: %5.2f ms, ', elapsed_time, (tcf-tci)*1000.);
+
     ndebug=ndebug+1;
     rex(ndebug,:) = (refLoc + Xexp(7:9))';   % Expected results
     rme(ndebug,:) = (refLoc + X(7:9))';      % "Measured" results (3D-OD)
     rkf(ndebug,:) = refLoc' + nState(1:3)'.*fx; % "Kalman Filterd" results
     vkf(ndebug)   = norm(nState(4:6)).*fv;  % "Kalman Filtered" velocity
-    tst(ndebug)   = (epochs(3)-tst0).*24;   % elapsed time (in hours)
+%     tst(ndebug)   = (epochs(3)-tst0).*24;   % elapsed time (in hours)
     lKg(ndebug)   = Kg;
     ldP(ndebug)   = det(nSigma);
-    unitvvector(1) = interp1(TimeList1, vel0(:,1), epochs(3), 'linear');
-    unitvvector(2) = interp1(TimeList1, vel0(:,2), epochs(3), 'linear');
-    unitvvector(3) = interp1(TimeList1, vel0(:,3), epochs(3), 'linear');
+    unitvvector(1) = interp1(TimeList0, vel0(:,1), epochs(3), 'linear');
+    unitvvector(2) = interp1(TimeList0, vel0(:,2), epochs(3), 'linear');
+    unitvvector(3) = interp1(TimeList0, vel0(:,3), epochs(3), 'linear');
     unitvvector = unitvvector./norm(unitvvector);
     %==> as expected:
     trx = norm(cross(Xexp(7:9)', unitvvector));
@@ -59,23 +70,23 @@ end
 if iDebug==3
     ndebug=ndebug+1; % must be ndebug = nbPts+1
     rex(ndebug,:) = (refLoc + Xexp(13:15))';   % Expected results
-    rme(ndebug,:) = (refLoc + X(13:15))';      % "Measured" results (3D-OD)
+    rme(ndebug,:) = [0. 0. 0.]; % (refLoc + X(13:15))';      % "Measured" results (3D-OD)
     rkf(ndebug,:) = refLoc' + nState(1:3)'.*fx; % "Kalman Filterd" results
     vkf(ndebug)   = norm(nState(4:6)).*fv;  % "Kalman Filtered" velocity
-    tst(ndebug)   = (epochs(5)-tst0).*24;   % elapsed time (in hours)
+%     tst(ndebug)   = (epochs(5)-tst0).*24;   % elapsed time (in hours)
     lKg(ndebug)   = Kg;
     ldP(ndebug)   = det(nSigma);
-    unitvvector(1) = interp1(TimeList1, vel0(:,1), epochs(5), 'linear');
-    unitvvector(2) = interp1(TimeList1, vel0(:,2), epochs(5), 'linear');
-    unitvvector(3) = interp1(TimeList1, vel0(:,3), epochs(5), 'linear');
+    unitvvector(1) = interp1(TimeList0, vel0(:,1), epochs(5), 'linear');
+    unitvvector(2) = interp1(TimeList0, vel0(:,2), epochs(5), 'linear');
+    unitvvector(3) = interp1(TimeList0, vel0(:,3), epochs(5), 'linear');
     unitvvector = unitvvector./norm(unitvvector);
     %==> as expected:
     trx = norm(cross(Xexp(13:15)', unitvvector));
     lgx = dot(Xexp(13:15), unitvvector);
     %==> as computed:
-    dtrm(ndebug) = norm(cross(X(13:15)', unitvvector)) - trx;
+    dtrm(ndebug) = 0.; % norm(cross(X(13:15)', unitvvector)) - trx;
     dtrk(ndebug) = norm(cross(fx*nState(1:3)', unitvvector)) - trx;
-    dlgm(ndebug) = dot(X(13:15)', unitvvector) - lgx;
+    dlgm(ndebug) = 0.; % dot(X(13:15)', unitvvector) - lgx;
     dlgk(ndebug) = dot(fx*nState(1:3)', unitvvector) - lgx;
 end
 % ------------
@@ -83,7 +94,7 @@ if iDebug==4
     rrkf=rkf-rex; % residual from KF-results
     rrme=rme-rex; % residual from 3D-OD results
     % largest max on x, y or z found for the rest of the KF processing
-    mxkf=max(abs(rrkf),[],2);
+    mxkf = max(abs(rrkf),[],2);
     mmkf = double(zeros(1,nbPts+1));
     mmtk = double(zeros(1,nbPts+1));
     mmlk = double(zeros(1,nbPts+1));
@@ -92,7 +103,7 @@ if iDebug==4
       mmtk(iid)=max(abs(dtrk(iid:nbPts+1)));
       mmlk(iid)=max(abs(dlgk(iid:nbPts+1)));
     end
-
+    
    if (writes)
     % file was created in (iDebug==10) section
     fw = fopen([outputs '_bin'],'a');
@@ -107,14 +118,17 @@ if iDebug==4
     % % to be reshaped into (nbPts+1) lines with:
     %   reshape(DATA, (3*3+10), nbPts)'; % (nbPts+1) lines x (3*3+10) columns
     fclose(fw);
+%     fprintf('nm,ij = %i,%i => norm(X-Xexp(1..5)): %7.1f %7.1f %7.1f %7.1f %7.1f\n', nm, ij, ...
+%         norm(X(1:3)-Xexp(1:3)), ...
+%         norm(X(4:6)-Xexp(4:6)), ...
+%         norm(X(7:9)-Xexp(7:9)), ...
+%         norm(X(10:12)-Xexp(10:12)), ...
+%         norm(X(13:15)-Xexp(13:15)));
    end
    if (graphs)
-    fprintf('X(x,y,z)\n');
-    fprintf('%7.1f %7.1f %7.1f: X(x,y,z)\n',X(1:3*Nobs));
-    fprintf('Xexp(x,y,z)\n');
-    fprintf('%7.1f %7.1f %7.1f: Xexp(x,y,z)\n',Xexp(1:3*Nobs));
-    fprintf('X-Xexp\n');
-    fprintf('%7.1f %7.1f %7.1f: X-Xexp\n',X(1:3*Nobs)-Xexp(1:3*Nobs));
+%     fprintf('X(x,y,z):   %7.1f %7.1f %7.1f\n',X(1:3*Nobs));
+%     fprintf('Xexp(x,y,z):%7.1f %7.1f %7.1f\n',Xexp(1:3*Nobs));
+%     fprintf('\n'); fprintf('X-Xexp:     %7.1f %7.1f %7.1f\n',X(1:3*Nobs)-Xexp(1:3*Nobs));
     % chronogrammes
     figure(102); clf;
     subplot(4,3, [1 3]);
@@ -125,7 +139,8 @@ if iDebug==4
     plot(rrme(:,2), 'gx:');
     plot(rrme(:,3), 'bx:');
 %     ylim([min(min(rrme)) max(max(rrme))]);
-   ylim([-2*mmkf(floor(nbPts*3/4)) 2*mmkf(floor(nbPts*3/4))]);
+    ylim([-2*mmkf(floor(nbPts*3/4)) 2*mmkf(floor(nbPts*3/4))]);
+%    ylim([-2*mmkf(floor(nbPts)) 2*mmkf(floor(nbPts))]);
     title('Residuals dX, dY, dZ (km)');
     legend('dX (-KF, ..3D-OD)', 'dY (-KF, ..3D-OD)', ...
         'dZ (-KF, ..3D-OD)', 'Location', 'SouthWest');
@@ -135,6 +150,7 @@ if iDebug==4
     plot(dtrm, 'gx:');
 %     ylim([-2*std(dtrm) 2*std(dtrm)]);
     ylim([-2*mmtk(floor(nbPts*3/4)) 2*mmtk(floor(nbPts*3/4))]);
+%     ylim([-2*mmtk(floor(nbPts)) 2*mmtk(floor(nbPts))]);
     plot(mmtk, 'r:'); plot(-mmtk, 'r:');
     title('Residual in transversal shift (km)');
     subplot(4,3, [7 9]);
@@ -142,6 +158,7 @@ if iDebug==4
     plot(dlgm, 'gx:');
 %     ylim([-2*std(dlgm) 2*std(dlgm)]);
     ylim([-2*mmlk(floor(nbPts*3/4)) 2*mmlk(floor(nbPts*3/4))]);
+%     ylim([-2*mmlk(floor(nbPts)) 2*mmlk(floor(nbPts))]);
     plot(mmlk, 'r:'); plot(-mmlk, 'r:');
     title('Residual in longitudinal shift (km)');
 
@@ -217,10 +234,15 @@ end
 if iDebug==11
    if (writes)
     fw = fopen([outputs '_bin'],'a');
-    fwrite(fw, [obstime(ik+nKF-2) obstime(ik+nKF)], 'double');
-    fwrite(fw, [Nobs nKF nbCycles (ik+nKF==length(obstime))], 'uint32');
+    fwrite(fw, [obstime(Nobs*nKF-2) obstime(Nobs*nKF)], 'double');
+    fwrite(fw, [Nobs nKF nbCycles (ii+simLims(2)>min([NbLT1 simLims(3)]))], 'uint32');
     % Z = fread(fw, 3, 'uint32'); will provide a 1x3 uint32 array
     fclose(fw);
+   end
+end
+% ------------
+if iDebug==12
+   if (writes)
     dtdebug = floor((now-t0debug)*1440.); % mn elapsed time in the OCTAVE process
     strnow = datestr(now,'yyyy-mm-ddTHH:MM:SS');
     dtcpu = floor((cputime-t0cpu)/60); % mn CPU (?) in the OCTAVE process
@@ -229,9 +251,6 @@ if iDebug==11
         strnow, scndebug, pid, dtdebug, dtcpu, strstart, ii);
     fclose(fw);
    end
-end
-% ------------
-if iDebug==12
    if (graphs)
     figure(11);
     subplot(2,1,1);
@@ -243,8 +262,8 @@ if iDebug==12
     set(gca, 'XColor', 'm'); set(gca, 'YColor', 'm');
     %
     subplot(2,1,2);
-    plot(epochs(Nobs)-TimeList1(1), data(7)-data(6), 'or');
-    errorbar(epochs(Nobs)-TimeList1(1), data(7)-data(6), data(8), 'r');
+    plot(epochs(Nobs)-TimeList1(1), data(5)-data(6), 'or');
+    errorbar(epochs(Nobs)-TimeList1(1), data(5)-data(6), data(8), 'r');
 %     idy=find(abs(data(:,7))<=2*mm(7)); mn2=mean(data(idy,7)-data(idy,6)); sg2 = max([.001 std(data(:,8))]); ylim([mn2-3*sg2 mn2+3*sg2]);
 %     xlim([0 tlim]); ylim([-6500 +6500]);
     xlabel('time (days)'); ylabel('Shift error (km)'); title('Longitudinal error');

@@ -9,9 +9,11 @@
 %	go see his tutorials : http://home.wlu.edu/~levys/kalman_tutorial/ 
 %	Linear kalman filter applied on Orbit Determination
 
-function [uX, uP, dK]=kf(isInit, update, eX, eP, dt, Z, sx,sv,sa)
+function [uX, uP, dK]=kf(update, eX, eP, dt, Z, sx,sv,sa)
+% function [uX, uP, dK]=kf(isInit, update, eX, eP, dt, Z, sx,sv,sa)
+% tiens, tiens, sv n'est pas utilise.... a verifier
 
-% State-transition model:
+% State-transition model:s
 A = [ eye(3)   dt.*eye(3) zeros(3) ; ...
       zeros(3) eye(3)     dt.*eye(3); ...
       zeros(3) zeros(3)   eye(3)];
@@ -25,13 +27,13 @@ C = [eye(3) zeros(3,6)];
 % R = blkdiag(sx.*eye(3), sv.eye(3), sa.*eye(3));
 R = sx.*eye(3);
 
-if isInit
-    uX = eX;
-    uP = eye(9);
-    dG = 1;
-    % [(dt^2/2)*sPredi dt*sPredi]'*[(dt^2/2)*sPredi dt*sPredi]; % Es (process noise) converted into covariance matrix
-    return;
-end
+% if isInit
+%     uX = eX;
+%     uP = eye(9);
+%     dK = 1;
+%     % [(dt^2/2)*sPredi dt*sPredi]'*[(dt^2/2)*sPredi dt*sPredi]; % Es (process noise) converted into covariance matrix
+%     return;
+% end
 
 % prediction:
 nX = A*eX;

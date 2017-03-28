@@ -1,7 +1,9 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
-version = '3.6';
+version = '3.7';
 % Version & Date:
+%                  V3.7 23-03-2017 (dd-mm-yyyy)
+%                  - debug in the KF control
 %                  V3.6 27-01-2017 (dd-mm-yyyy)
 %                  - minor changes and comments
 %                  V3.5 24-01-2017 (dd-mm-yyyy)
@@ -43,11 +45,16 @@ version = '3.6';
 % dt=dtConst.*[ones(1,Nobs-1); zeros(1,Nobs-1)];
 % epochs  = slctEpochs(Nobs, TimeList1(ii), T, dt);
 
-for ij = Nobs:nKF
-  epochs(1:Nobs)   = obstime(ik+ij-Nobs+1:ik+ij);
-  measur(1:Nobs,:) = measurd(ij-Nobs+1:ij,:);
-  predic(1:Nobs,:) = predict(ij-Nobs+1:ij,:);
-  bodies(1:Nobs)   = obsbody(ij-Nobs+1:ij);
+% cumul_CPU = 0.; % initized in stat_extraction.m
+for ij = 1:nKF
+%   epochs(1:Nobs)   = obstime(ik+ij-Nobs+1:ik+ij);
+%   measur(1:Nobs,:) = measurd(ij-Nobs+1:ij,:);
+%   predic(1:Nobs,:) = predict(ij-Nobs+1:ij,:);
+%   bodies(1:Nobs)   = obsbody(ij-Nobs+1:ij);
+  epochs(1:Nobs)   = obstime(1+Nobs*(ij-1):Nobs*ij);
+  measur(1:Nobs,:) = measurd(1+Nobs*(ij-1):Nobs*ij,:);
+  predic(1:Nobs,:) = predict(1+Nobs*(ij-1):Nobs*ij,:);
+  bodies(1:Nobs)   = obsbody(1+Nobs*(ij-1):Nobs*ij);
   pRefLoc = refLoc;
   refLoc = - refState(1:3) + [ ...
     interp1(TimeList0, coord0(:,1), epochs(3), 'linear'); ...
@@ -60,41 +67,47 @@ for ij = Nobs:nKF
                 interp1(TimeList0, vel0(:,2),   epochs(2), 'linear'); ...
                 interp1(TimeList0, vel0(:,3),   epochs(2), 'linear')] ...
                )./((epochs(3)-epochs(2))*86400.); % km/s^-2
-    
   [X,A,B,elapsed_time] = computeSolution(epochs, measur, predic, algo);
-%   il faut extraire le delta-acceleration de Xexp (pour l'instant fait ici)
-%   plus tard il faudra l'extraire de refTrajectory
-  Xexp = expectedOD (TimeList0, NbLE0, TimeListE0, dist0, coord0, vel0, ...
-                     epochs, bodies, ...
-                     TimeList1, NbLE1, TimeListE1, dist1,coord1,vel1);
-  if ij == Nobs
-        isInit=true;
+
+  if ij == 1
+%         isInit=true;
         % dimensionless approach
         oneOD_factors; % fx, fv, fa, ft
+%         pState=[(X(7:9))./fx; ...
+%                  (refState(4:6)-(refLoc-pRefLoc)./dtKF)./fv; ...
+%                  accEstimate./fa]; <==== gros doute là-dessus!!!
         pState=[(X(7:9))./fx; ...
-                 (refState(4:6)-(refLoc-pRefLoc)./dtKF)./fv; ...
+                 refState(4:6)./fv; ...
                  accEstimate./fa];
         pSigma=eye(9);
-        isInit=false;
+%         isInit=false;
   end
+%   fprintf('Inversion: %5.2f ms, expectedOD: %5.2f ms, ', elapsed_time, (tcf-tci)*1000.);
 %     u = Xexp(24:26)'./sa; % dimensionless delta-acceleration (unit: in sa)
 %     Z = (refLoc + X(7:9))./fx;       % position wrt refState (unit: in fx)
+  tci= toc;
   Z = X(7:9)./fx;       % position wrt refState (unit: in fx)
 %     [nState, nSigma] = kf(isInit, pState, pSigma, dtKF/st, u, m, sigma_acc, sigma_dist);
 % --------> function [uX, uP]=kf(isInit, eX, eP, dt, Z, sx,sv,sa)
   update = true;
-  [nState, nSigma, Kg] = kf(isInit, update, pState, pSigma, dtKF/ft, Z, sx,sv,sa);
-  iDebug=2; debug;
+%   [nState, nSigma, Kg] = kf(isInit, update, pState, pSigma, Nobs.*dtKF./ft, Z, sx,sv,sa);
+  [nState, nSigma, Kg] = kf(update, pState, pSigma, Nobs.*dtKF./ft, Z, sx,sv,sa);
   pState = nState; % new state vector
   pSigma = nSigma; % new covariance matrix
+  tcf = (toc-tci)*1000.;
+
+  iDebug=2; debug; % Xexp, X (3D-OD result) and nState (KF result) are stored
+  % X(floor(0.5+Nobs/2)*3-2:floor(0.5+Nobs/2)*3) = (nState(1:3)).*fx;
+  % if uncommented, the returned X(7:9) is the last KF-solution based on measurement at t3
+
   if ij == nKF
-      update = false; dt = 86400.*(epochs(5)-epochs(3));
-      [nState, nSigma, Kg] = kf(isInit, update, pState, pSigma, dt/ft, Z, sx,sv,sa);
+      update = false;
+      dt = 86400.*(epochs(5)-epochs(3));
+      [nState, nSigma, Kg] = kf(update, pState, pSigma, dt./ft, Z, sx,sv,sa);
       iDebug=3; debug;
-      X(3*Nobs-2:3*Nobs) = (nState(1:3)).*fx;
+      X(Nobs*3-2:Nobs*3) = (nState(1:3)).*fx;
+      % the returned X(13:15) is the last predicted KF-solution at t5
   end
-% the returned X(7:9) is the last KF-solution based on measurement at t3
-% the returned X(13:15) is the last predicted KF-solution at t5
-X(7:9) = (pState(1:3)).*fx;
+  cumul_CPU = cumul_CPU + elapsed_time + tcf;
 
 end
