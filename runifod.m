@@ -29,7 +29,7 @@ Nobs = 5;
 % TEST / DEBUG
 if (tests)
     datapath='../ifod_tests/datasets/'; % runifod_scenario.m
-    fscenario='Y0_min';      % runifod_scenario.m
+    fscenario='Y0_v4';      % runifod_scenario.m
     scnRealistic = false;      % runifod_scenario.m
     sigma_obs = 0.1;         % runifod_MCdrivers.m
     nKF = 8*24;                  % runifod_MCdrivers.m

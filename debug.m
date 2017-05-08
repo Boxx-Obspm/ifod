@@ -39,23 +39,28 @@ end
 if iDebug==2
 %       fprintf('Inversion: %5.2f ms, ', elapsed_time);
 %       tci=toc;  
-      Xexp = expectedOD (TimeList0, NbLE0, TimeListE0, dist0, coord0, vel0, ...
-                         epochs, bodies, ...
-                         TimeList1, NbLE1, TimeListE1, dist1,coord1,vel1);
+%       Xexp = expectedOD (TimeList0, NbLE0, TimeListE0, dist0, coord0, vel0, ...
+%                          epochs, bodies, ...
+%                          TimeList1, NbLE1, TimeListE1, dist1,coord1,vel1);
+      Xexp = expectedOD (TimeList0, vel0, fromXYZ0(1+Nobs*(ij-1):Nobs*ij, 1:3), ...
+          TimeList1, vel1, fromXYZ1(1+Nobs*(ij-1):Nobs*ij, 1:3), ...
+          epochs, obsXYZ(1+Nobs*(ij-1):Nobs*ij, 1:3), method);
+
 %       tcf=toc;
 %       fprintf('Inversion: %5.2f ms, expectedOD: %5.2f ms, ', elapsed_time, (tcf-tci)*1000.);
 
     ndebug=ndebug+1;
-    rex(ndebug,:) = (refLoc + Xexp(7:9))';   % Expected results
-    rme(ndebug,:) = (refLoc + X(7:9))';      % "Measured" results (3D-OD)
-    rkf(ndebug,:) = refLoc' + nState(1:3)'.*fx; % "Kalman Filterd" results
+    rex(ndebug,:) = (refLoc + Xexp(7:9)');   % Expected results
+    rme(ndebug,:) = (refLoc + X(7:9)');      % "Measured" results (3D-OD)
+    rkf(ndebug,:) = refLoc + nState(1:3)'.*fx; % "Kalman Filterd" results
     vkf(ndebug)   = norm(nState(4:6)).*fv;  % "Kalman Filtered" velocity
 %     tst(ndebug)   = (epochs(3)-tst0).*24;   % elapsed time (in hours)
     lKg(ndebug)   = Kg;
     ldP(ndebug)   = det(nSigma);
-    unitvvector(1) = interp1(TimeList0, vel0(:,1), epochs(3), 'linear');
-    unitvvector(2) = interp1(TimeList0, vel0(:,2), epochs(3), 'linear');
-    unitvvector(3) = interp1(TimeList0, vel0(:,3), epochs(3), 'linear');
+    unitvvector = interp1(TimeList0, vel0, epochs(3), method);
+%     unitvvector(1) = interp1(TimeList0, vel0(:,1), epochs(3), 'linear');
+%     unitvvector(2) = interp1(TimeList0, vel0(:,2), epochs(3), 'linear');
+%     unitvvector(3) = interp1(TimeList0, vel0(:,3), epochs(3), 'linear');
     unitvvector = unitvvector./norm(unitvvector);
     %==> as expected:
     trx = norm(cross(Xexp(7:9)', unitvvector));
@@ -69,16 +74,17 @@ end
 % ------------
 if iDebug==3
     ndebug=ndebug+1; % must be ndebug = nbPts+1
-    rex(ndebug,:) = (refLoc + Xexp(13:15))';   % Expected results
+    rex(ndebug,:) = (refLoc + Xexp(13:15)');   % Expected results
     rme(ndebug,:) = [0. 0. 0.]; % (refLoc + X(13:15))';      % "Measured" results (3D-OD)
-    rkf(ndebug,:) = refLoc' + nState(1:3)'.*fx; % "Kalman Filterd" results
+    rkf(ndebug,:) = refLoc + nState(1:3)'.*fx; % "Kalman Filterd" results
     vkf(ndebug)   = norm(nState(4:6)).*fv;  % "Kalman Filtered" velocity
 %     tst(ndebug)   = (epochs(5)-tst0).*24;   % elapsed time (in hours)
     lKg(ndebug)   = Kg;
     ldP(ndebug)   = det(nSigma);
-    unitvvector(1) = interp1(TimeList0, vel0(:,1), epochs(5), 'linear');
-    unitvvector(2) = interp1(TimeList0, vel0(:,2), epochs(5), 'linear');
-    unitvvector(3) = interp1(TimeList0, vel0(:,3), epochs(5), 'linear');
+    unitvvector = interp1(TimeList0, vel0, epochs(5), method);
+%     unitvvector(1) = interp1(TimeList0, vel0(:,1), epochs(5), 'linear');
+%     unitvvector(2) = interp1(TimeList0, vel0(:,2), epochs(5), 'linear');
+%     unitvvector(3) = interp1(TimeList0, vel0(:,3), epochs(5), 'linear');
     unitvvector = unitvvector./norm(unitvvector);
     %==> as expected:
     trx = norm(cross(Xexp(13:15)', unitvvector));
@@ -215,7 +221,7 @@ if iDebug==10
      fclose(fw);
      t0debug = now; strstart = datestr(t0debug,'yyyy-mm-ddTHH:MM:SS');
      t0cpu = cputime;
-     scndebug = [fscenario pfix];
+     scndebug = outputs; % [fscenario pfix];
      fw = fopen('ifod_log','a');
      pid = 0; % default (if MATLAB local run)
      if (runInOctave) pid = getpid(); end % OCTAVE run
@@ -247,8 +253,8 @@ if iDebug==12
     strnow = datestr(now,'yyyy-mm-ddTHH:MM:SS');
     dtcpu = floor((cputime-t0cpu)/60); % mn CPU (?) in the OCTAVE process
     fw = fopen('ifod_log','a');
-    fprintf(fw,'%s %s PID: %5i %5imn [ %4imn CPU] since %s, time-step: %3i\n', ...
-        strnow, scndebug, pid, dtdebug, dtcpu, strstart, ii);
+    fprintf(fw,'%s %s PID: %5i %5imn [ %4imn CPU] since %s, Epoch: %.3f\n', ...
+        strnow, scndebug, pid, dtdebug, dtcpu, strstart, tt);
     fclose(fw);
    end
    if (graphs)

@@ -19,7 +19,7 @@
 # not tested in OCTAVE yet
 
 # own routines:
-# - README_v1.8.md
+============> # - README_v1.9.md <================ 1.9 = NEXT DELIVERY (May 2017)
 # - runifod.m, v1.6 (+ runifod_MCdrivers.m, runifod_scenario.m)
 # - readEphem.m, v3.1
 # - readTraj.m, v3.1
