@@ -1,40 +1,35 @@
 # ifod
 # In-Flight Orbit Determination in deep-space from optical sensors
-# Version & Date:   V1.8 28-Mar-2017, Boris Segret
+# Version & Date:   V1.9 26-Jun-2017, Boris Segret
 # CL=2
 #
 # runifod.m : main program, for MATLAB or OCTAVE
-# I/: a scenario file is requested (and associated data & files)
+# I/: a scenario file is requested (and its associated data)
 # S/: comparisons between actual and reconstructed trajectory, with MC simu for standard deviations
-# F/: see technical note BIRDY NAV-002 for details
-
-# Content Reference:
+# F/: see technical notes
+#     BIRDY NAV-002 for details on the on-board algorithm itself
+#     BIRDY NAV-011 for details on the implementation of the prototype with MATLAB/OCTAVE
 
 # Test Dataset => run "ifod" in Octave or Matlab from its local path to test it runs properly
-# - ../ifod_tests/datasets/EME_mini : scenario file, as given in "runifod_scenario.m" file
-# - ../ifod_tests/datasets/Trajectories/* : *.eph, *.xyzv (ref ephemerids and ref trajectory)
-# - ../ifod_tests/datasets/Trajectories/T0+jdv_y-axis/* : *.eph, *.xyzv (shifted eph and shifted trajectory)
-# Results written into <datasets/EME_mini/>../outs/Ebtest_xxx file and log_ifod
-# (in OCTAVE some warnings about cross product may be displayed)
-# not tested in OCTAVE yet
+# - ../ifod_tests/Y0_v4 (v4.0) : mini scenario file
+# - ../ifod_tests/datasets/*.xva : ephemerides and ref trajectories
+# Results written into <../ifod_tests/outs/>Y0v4_xxx,tests and ,tests_bin file
+# v1.9 was *tested* in OCTAVE
 
+# Content Reference:
+# - README_v1.9.md: this present note
+# - LICENSE, GNU Version 3, 29 June 2007
+# - .gitignore: settings for github CVS
 # own routines:
-============> # - README_v1.9.md <================ 1.9 = NEXT DELIVERY (May 2017)
 # - runifod.m, v1.6 (+ runifod_MCdrivers.m, runifod_scenario.m)
-# - readEphem.m, v3.1
-# - readTraj.m, v3.1
-# - extractObs.m, v2.3
-# - prepareObs.m, v2.3
+# - readTraj.m, v3.2
 # - computeSolution.m, v2.3.1
-# - oneOD.m, v3.7 (+ oneOD_factors.m)
+# - kf.m, v1.1
+# - oneOD.m, v3.8 (+ oneOD_factors.m)
 # - debug.m, v1.2
 # useful test routines:
-# - runbash (shell)
+# - runbash (shell), v1.0
 # - ../myJobs (shell & SLURM on tycho.obspm.fr)
-# - ../ifod_tests/datasets/EME_mini + related files
-# - ../ifod_tests/fixEPHfiles.m, v1.1
-# - ../ifod_tests/JD2VTS_eph.m, v1.1
-# - ../ifod_tests/JD2VTS_traj.m, v1.1
-# - ../ifod_tests/prodEPHfiles.m, v1.1
+# - ../ifod_tests/Y0_v4 (v4.0) + related files
 # external routines:
-# - ../ifod_eval/stat_extraction.m, v3.3.4
+# - ../ifod_eval/stat_extraction.m, v4.0

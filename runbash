@@ -1,9 +1,9 @@
 #!/bin/bash
-# lancement de MC4..MC0 le 22/12-22h env.
+# Lancement sur LESIA08 avec OCTAVE (22h cpu!!!)
+# v1.0, CL=2, 6/01/2017
 
 cd /obs/bsegret/NAV-002/ifod_kf/ifod 
 nohup nice -n 19 octave runifod.m &
 # ps -u bsegret u | grep 'octave runifod.m$' | sort -nr |  awk '{print $6,$9,$10, "...",$NF}'
 # read -p "Process ID to be reniced?" nid
 # echo "type this: renice 10 "$nid
-

@@ -7,7 +7,7 @@
 %                   - part of the IFOD debugging
 %                   - called from various location of ifod_eval/stat_extraction and ifod/oneOD.m
 %                   - stores the elementary results at KF level or MC cycle level
-% CL=2
+% CL=2 (v1.2)
 
 % iDebug=0; % switch for debug mode
 graphs = false; % plots graphs

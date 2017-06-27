@@ -16,19 +16,19 @@
 %                   - it assumes "./inputs/scenario" file provides evrything necessary
 %                   - it assumes "../ifod_eval/data_extraction.m" iterates for all trajectory points
 %                   - it runs standard plots for quick analyses of the results
-% CL=2
+% CL=2 (v1.6)
 
 % F/ runifod_MCdrivers.m, runifod_scenario.m are called if non-test run
 
 clear;
 tests = false;
-% tests = true;
+tests = true;
 runInOctave = false;
 Nobs = 5;
 
 % TEST / DEBUG
 if (tests)
-    datapath='../ifod_tests/datasets/'; % runifod_scenario.m
+    datapath='../ifod_tests/'; % runifod_scenario.m
     fscenario='Y0_v4';      % runifod_scenario.m
     scnRealistic = false;      % runifod_scenario.m
     sigma_obs = 0.1;         % runifod_MCdrivers.m

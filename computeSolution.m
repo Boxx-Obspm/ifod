@@ -16,7 +16,7 @@
 %                  - *no* call to reference_trajectory.m
 %                  - *no* changes of the inputs
 %                  until V2 11-09-2015 Oussema SLEIMI & Tristan Mallet
-%CL=0
+%CL=2 (v2.3)
 %
 % ifod algorithm: <reconstructed_shift> (X) is estimated from the on-board measured
 % directions of foreground bodies compared with the expected directions of these bodies.

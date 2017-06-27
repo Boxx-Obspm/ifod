@@ -1,7 +1,9 @@
 %%----------------HEADER---------------------------%%
 % Author:           Boris Segret
 % Version & Date:
-%                   V1.0 11-12-2017 (dd-mm-yyyy)
+%                   V1.1 19-03-2017 (dd-mm-yyyy)
+%                   - new settings and improvements, adimensionning
+%                   V1.0 11-12-2016 (dd-mm-yyyy)
 %                   - part of the IFOD debugging
 %                   - called from various location of ifod_eval/stat_extraction and ifod/oneOD.m
 %                   - stores the elementary results at KF level or MC cycle level
