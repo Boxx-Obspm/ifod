@@ -22,7 +22,7 @@
 
 clear;
 tests = false;
-tests = true;
+% tests = true;
 runInOctave = false;
 Nobs = 5;
 

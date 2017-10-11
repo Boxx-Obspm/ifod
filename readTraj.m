@@ -1,10 +1,12 @@
 %%----------------HEADER---------------------------%%
 %Author:           Boris Segret
 %Version & Date:   
+%                  V3.3 08-07-2017 (dd/mm/yyyy)
+%                  - input period of time to limit the reading
+%CL=2 (V3.2)
+%Version & Date:
 %                  V3.2 02-05-2017 (dd/mm/yyyy)
 %                  - input trajectory files can have either 5, 8 or 11 columns
-%CL=2 (V3.1)
-%Version & Date:
 %                  V3.1 10-04-2016 (dd/mm/yyyy)
 %                  - input trajectory are expected in 8-column VTS format (dates in 2 columns: MJD+sec.)
 %                  - REMAINING ISSUE: the input must have exactly 8 columns (no tolerance for additional columns)
@@ -16,6 +18,7 @@
 %
 % 1. Inputs:
 %     fpath       = trajectory file in 5-, 8- or 11-column VTS format
+%     
 %
 % 2. Outputs:
 %     NbLines     = integer, Nb of records
@@ -24,7 +27,7 @@
 %     velocities  = double float NbLines-vector, velocity vx,vy,vz (km/s)
 %     gravitation = double float NbLines-vector, gravitational field at x,y,z (units tbd)
 
-function [NbLines, TimeSteps, dataBack] = readTraj(fpath)
+function [NbLines, TimeSteps, dataBack] = readTraj(fpath, ti, tf)
 
 
 % read a trajectory file after the META_STOP tag
@@ -37,19 +40,25 @@ while not(fin)
     end;
 end;
 NbLines = 0;
+ended = false;
 while not(fin)
     l=fgetl(f1); fin =  feof(f1);
     if length(l)>1
         [A, nb, errmsg, nextindex] = sscanf(l, '%f %f %f %f %f %f %f %f %f %f %f', [1 11]);
+        if (A(1)+A(2)./86400>=ti && A(1)+A(2)./86400<=tf) || (NbLines==0) || ~ended
         NbLines = NbLines+1;
         if (NbLines==1)
             data = A(1:nb); % (MJD, secMJD, X, Y, Z [,VX,VY,VZ[,AX,AY,AZ]])
             if (nb~=5 && nb~=8 && nb~=11) fprintf('Wrong number of columns in %s\n', fpath); end
             nc = nb;
         else
+            if (A(1)+A(2)./86400>tf) 
+                ended=true;
+            end
             data = [data; A(1:nb)]; % (MJD, secMJD, X, Y, Z [,VX,VY,VZ[,AX,AY,AZ]])
             % if (mod(NbLines,10)==0) fprintf('/'); end
             % if (mod(NbLines,100)==0) fprintf(':%i\n',NbLines); end
+        end
         end
     end;
 end;
